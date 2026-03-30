@@ -1,0 +1,50 @@
+# Ignoring build output
+bin/
+obj/
+
+# Ignoring generated documentation XML files
+src/**/*.xml
+
+# Ignoring user-specific files
+*.user
+*.sln.DotSettings.user
+
+# Ignoring publish output
+publish/
+out/
+
+# Ignoring VS Code settings
+.vscode/
+
+# Ignoring Rider settings
+.idea/
+
+# Ignoring NuGet packages
+*.nupkg
+
+# Ignoring logs
+*.log
+
+# Ignoring test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Ignoring local secrets
+secrets.json
+.github/copilot-instructions.md
+
+# Ignoring integration test configuration (contains Auth0 credentials)
+tests/Auth0.AspNetCore.Authentication.Api.IntegrationTests/client-secrets.json
+
+# Ignoring DocFX output
+_site/
+docs/
+docs-source/api/
+.docfx/
+docfx.zip
+
+# Ignoring Misc
+.DS_Store
+.github/.DS_Store

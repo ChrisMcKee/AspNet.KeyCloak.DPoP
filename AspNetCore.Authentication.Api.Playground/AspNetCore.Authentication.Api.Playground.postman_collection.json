@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "24ec6f42-3fa5-40c6-855b-f78407dfad7b",
+		"name": "AspNetCore.Authentication.Api.Playground",
+		"description": "# 🚀 Get started here\n\nServes as sample API calls to the `AspNetCore.Authentication.Api Playground` application to test the incoming token validation.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nAuthenticate to `Auth0` and get a valid token. Set the `{token}` variable with the token received.\n\n#### **Step 2: Ensure Playground is running**\n\nEnsure the your Playground application is running.\n\n#### **Step 3: Hit the end-point**\n\nHit the restricted end-point. You will receive a success response only if the token you used is valid",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38216635"
+	},
+	"item": [
+		{
+			"name": "Open end point",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5059/open-endpoint/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5059",
+					"path": [
+						"open-endpoint",
+						""
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "Restricted end-point",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5059/restricted-endpoint/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5059",
+					"path": [
+						"restricted-endpoint",
+						""
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "valid token string"
+		}
+	]
+}
