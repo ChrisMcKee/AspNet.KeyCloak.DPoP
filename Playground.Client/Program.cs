@@ -10,10 +10,10 @@ namespace AspNetCore.Authentication.Api.DPoPClient;
 ///
 /// Usage:
 ///     Set environment variables:
-///     - KeyCloak_DOMAIN
-///     - KeyCloak_AUDIENCE
-///     - KeyCloak_CLIENT_ID
-///     - KeyCloak_CLIENT_SECRET
+///     - KEYCLOAK_DOMAIN
+///     - KEYCLOAK_AUDIENCE
+///     - KEYCLOAK_CLIENT_ID
+///     - KEYCLOAK_CLIENT_SECRET
 ///     - API_BASE_URL (optional, defaults to https://localhost:7168)
 ///
 ///     Then run:
@@ -120,37 +120,14 @@ class Program
 
     static KeyCloakConfig LoadConfiguration()
     {
-        var domain = Environment.GetEnvironmentVariable("KeyCloak_DOMAIN");
-        var audience = Environment.GetEnvironmentVariable("KeyCloak_AUDIENCE");
-        var clientId = Environment.GetEnvironmentVariable("KeyCloak_CLIENT_ID");
-        var clientSecret = Environment.GetEnvironmentVariable("KeyCloak_CLIENT_SECRET");
-        var apiBaseUrl = Environment.GetEnvironmentVariable("API_BASE_URL") ?? "https://localhost:7168";
+        // Defaults match the Keycloak container started by Playground.Server (port 8080, realm "test").
+        // Override any of these with environment variables to point at a different Keycloak instance.
+        var domain      = Environment.GetEnvironmentVariable("KEYCLOAK_DOMAIN")        ?? "localhost:8080/realms/test";
+        var audience    = Environment.GetEnvironmentVariable("KEYCLOAK_AUDIENCE")      ?? "test-api";
+        var clientId    = Environment.GetEnvironmentVariable("KEYCLOAK_CLIENT_ID")     ?? "dpop-client";
+        var clientSecret = Environment.GetEnvironmentVariable("KEYCLOAK_CLIENT_SECRET") ?? "dpop-secret";
+        var apiBaseUrl  = Environment.GetEnvironmentVariable("API_BASE_URL")           ?? "http://localhost:5059";
 
-        var missing = new List<string>();
-        if (string.IsNullOrEmpty(domain)) missing.Add("KeyCloak_DOMAIN");
-        if (string.IsNullOrEmpty(audience)) missing.Add("KeyCloak_AUDIENCE");
-        if (string.IsNullOrEmpty(clientId)) missing.Add("KeyCloak_CLIENT_ID");
-        if (string.IsNullOrEmpty(clientSecret)) missing.Add("KeyCloak_CLIENT_SECRET");
-
-        if (missing.Any())
-        {
-            Console.WriteLine("❌ Missing required environment variables:");
-            foreach (var key in missing)
-            {
-                Console.WriteLine($"   - {key}");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Please set the following environment variables:");
-            Console.WriteLine("  export KeyCloak_DOMAIN='your-domain.example.com'");
-            Console.WriteLine("  export KeyCloak_AUDIENCE='your-api-identifier'");
-            Console.WriteLine("  export KeyCloak_CLIENT_ID='your-client-id'");
-            Console.WriteLine("  export KeyCloak_CLIENT_SECRET='your-client-secret'");
-            Console.WriteLine();
-            Console.WriteLine("Optionally:");
-            Console.WriteLine("  export API_BASE_URL='https://localhost:7168'");
-            Environment.Exit(1);
-        }
-
-        return new KeyCloakConfig(domain!, audience!, clientId!, clientSecret!, apiBaseUrl);
+        return new KeyCloakConfig(domain, audience, clientId, clientSecret, apiBaseUrl);
     }
 }

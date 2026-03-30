@@ -239,11 +239,11 @@ public class DPoPClient : IDisposable
     }
 
     /// <summary>
-    /// Gets a DPoP-bound access token from
+    /// Gets a DPoP-bound access token from Keycloak using client credentials with a DPoP proof.
     /// </summary>
     public async Task<string> GetDPoPTokenAsync(KeyCloakConfig config)
     {
-        var tokenUrl = $"https://{config.Domain}/oauth/token";
+        var tokenUrl = $"http://{config.Domain}/protocol/openid-connect/token";
 
         Console.WriteLine($"🔑 Requesting DPoP-bound token from: {tokenUrl}");
 
@@ -259,8 +259,8 @@ public class DPoPClient : IDisposable
         {
             { "grant_type", "client_credentials" },
             { "client_id", config.ClientId },
-            { "client_secret", config.ClientSecret },
-            { "audience", config.Audience }
+            { "client_secret", config.ClientSecret }
+            // audience not sent — Keycloak enforces it server-side via the audience mapper
         };
 
         request.Content = new FormUrlEncodedContent(formData);
