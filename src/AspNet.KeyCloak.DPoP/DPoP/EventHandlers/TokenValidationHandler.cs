@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 
-namespace AspNetCore.Authentication.Api.DPoP.EventHandlers;
+namespace AspNet.KeyCloak.DPoP.DPoP.EventHandlers;
 
 public class TokenValidationHandler : DPoPEventHandlerBase, IDPoPEventHandler<TokenValidatedContext>
 {

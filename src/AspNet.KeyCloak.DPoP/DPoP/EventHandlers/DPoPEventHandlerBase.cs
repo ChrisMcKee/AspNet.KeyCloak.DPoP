@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 
-namespace AspNetCore.Authentication.Api.DPoP.EventHandlers;
+namespace AspNet.KeyCloak.DPoP.DPoP.EventHandlers;
 
 /// <summary>
 ///     Base class for DPoP event handlers.

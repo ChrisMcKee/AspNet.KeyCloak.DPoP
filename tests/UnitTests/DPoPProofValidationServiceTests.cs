@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using System.Text.Json;
 
-using AspNetCore.Authentication.Api;
-using AspNetCore.Authentication.Api.DPoP;
+using AspNet.KeyCloak.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP;
 
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;

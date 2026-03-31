@@ -5,7 +5,7 @@
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <RootNamespace>AspNetCore.Authentication.Api</RootNamespace>
+    <RootNamespace>AspNet.KeyCloak.DPoP</RootNamespace>
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>

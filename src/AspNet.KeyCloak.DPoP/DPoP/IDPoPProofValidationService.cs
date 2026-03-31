@@ -1,4 +1,4 @@
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 public interface IDPoPProofValidationService
 {

@@ -1,4 +1,5 @@
-using AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,8 +60,8 @@ public class TestWebApplicationFactory : IAsyncDisposable
                         authBuilder.WithDPoP(dpopOptions =>
                         {
                             dpopOptions.Mode = _scenario.IsDPoPRequired
-                                ? AspNetCore.Authentication.Api.DPoP.DPoPModes.Required
-                                : AspNetCore.Authentication.Api.DPoP.DPoPModes.Allowed;
+                                ? DPoPModes.Required
+                                : DPoPModes.Allowed;
                         });
                     }
 

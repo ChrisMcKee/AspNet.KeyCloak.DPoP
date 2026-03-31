@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Authentication.Api.DPoP.EventHandlers;
+namespace AspNet.KeyCloak.DPoP.DPoP.EventHandlers;
 
 /// <summary>
 /// Handles JWT Bearer challenge events for DPoP authentication scenarios.

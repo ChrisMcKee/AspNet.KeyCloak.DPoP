@@ -4,7 +4,7 @@ using System.Text;
 
 [assembly: InternalsVisibleTo("UnitTests")]
 
-namespace AspNetCore.Authentication.Api;
+namespace AspNet.KeyCloak.DPoP;
 
 public abstract class Utils
 {

@@ -2,8 +2,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
-using AspNetCore.Authentication.Api;
-using AspNetCore.Authentication.Api.DPoP;
+using AspNet.KeyCloak.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

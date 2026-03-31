@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     Service for validating DPoP (Demonstration of Proof-of-Possession) proof tokens

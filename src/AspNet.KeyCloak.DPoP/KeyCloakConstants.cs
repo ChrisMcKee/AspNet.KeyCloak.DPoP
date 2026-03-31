@@ -1,4 +1,4 @@
-namespace AspNetCore.Authentication.Api;
+namespace AspNet.KeyCloak.DPoP;
 
 /// <summary>
 ///     Provides a container for KeyCloak-specific constant values that are used throughout the SDK.

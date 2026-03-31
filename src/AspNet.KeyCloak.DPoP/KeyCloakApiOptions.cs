@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace AspNetCore.Authentication.Api;
+namespace AspNet.KeyCloak.DPoP;
 
 /// <summary>
 ///     Configuration options for KeyCloak API authentication.

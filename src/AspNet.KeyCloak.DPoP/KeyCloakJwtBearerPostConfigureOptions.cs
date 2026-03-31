@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 
-namespace AspNetCore.Authentication.Api;
+namespace AspNet.KeyCloak.DPoP;
 
 /// <summary>
 ///     Post-configures <see cref="JwtBearerOptions" />

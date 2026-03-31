@@ -1,4 +1,4 @@
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     Represents the result of validating a DPoP proof.

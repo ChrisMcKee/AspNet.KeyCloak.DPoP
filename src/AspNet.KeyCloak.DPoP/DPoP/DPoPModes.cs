@@ -1,4 +1,4 @@
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     Specifies the available DPoP (Demonstration of Proof-of-Possession) enforcement modes.

@@ -1,4 +1,4 @@
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     Tracks DPoP proof <c>jti</c> (JWT ID) values to prevent replay attacks.

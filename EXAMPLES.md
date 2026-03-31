@@ -36,7 +36,7 @@ This document provides practical, copy-pastable code examples for common scenari
 Basic setup for KeyCloak JWT authentication in a minimal API.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,7 +70,7 @@ app.Run();
 Protect endpoints using `RequireAuthorization()` in minimal APIs.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -118,7 +118,7 @@ app.Run();
 Protect endpoints using `[Authorize]` attribute in controllers.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -186,7 +186,7 @@ public record DataModel(int Id, string Name);
 Customize JWT token validation with specific parameters.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -209,7 +209,7 @@ builder.Services.AddKeyCloakApiAuthentication(options =>
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromMinutes(5),
             NameClaimType = "name",
-            RoleClaimType = "https://schemas.KeyCloak.com/roles"
+            RoleClaimType = "roles" // Adjust to match your Keycloak role claim mapping
         }
     };
 });
@@ -238,7 +238,7 @@ DPoP is a security mechanism that binds access tokens to cryptographic keys, pre
 Enable DPoP with a single method call - accepts both DPoP and Bearer tokens.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -281,8 +281,8 @@ app.Run();
 Use Allowed mode to gradually adopt DPoP without breaking existing clients using Bearer tokens.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
-using KeyCloak.AspNetCore.Authentication.Api.DPoP;
+using AspNet.KeyCloak.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -337,8 +337,8 @@ app.Run();
 Use Required mode when you want maximum security - only DPoP tokens are accepted.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
-using KeyCloak.AspNetCore.Authentication.Api.DPoP;
+using AspNet.KeyCloak.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -381,7 +381,7 @@ app.Run();
 Validate scopes from KeyCloak access tokens using authorization policies.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -469,7 +469,7 @@ public record ProductModel(int Id, string Name);
 Validate KeyCloak permissions using custom authorization policies.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -545,7 +545,7 @@ public record UserModel(string Id, string Name, string Email);
 Create a reusable authorization handler for scope validation.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -645,7 +645,7 @@ public record InventoryItem(int Id, string Name, int Quantity);
 Validate KeyCloak roles using authorization policies.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -661,7 +661,7 @@ builder.Services.AddKeyCloakApiAuthentication(options =>
         Audience = builder.Configuration["KeyCloak:Audience"],
         TokenValidationParameters = new TokenValidationParameters
         {
-            RoleClaimType = "https://schemas.KeyCloak.com/roles"
+            RoleClaimType = "roles" // Adjust to match your Keycloak role claim mapping
         }
     };
 });
@@ -697,7 +697,7 @@ public class AdminController : ControllerBase
     [HttpGet("reports")]
     public IActionResult GetReports()
     {
-        var userRoles = User.FindAll("https://schemas.KeyCloak.com/roles")
+        var userRoles = User.FindAll("roles") // Adjust to match your Keycloak role claim mapping
             .Select(c => c.Value);
         
         return Ok(new { message = "Reports data", roles = userRoles });
@@ -714,7 +714,7 @@ public class AdminController : ControllerBase
 Access and use user claims from KeyCloak tokens.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
@@ -764,7 +764,7 @@ app.Run();
 Implement custom logic during JWT authentication events.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -857,7 +857,7 @@ app.Run();
 Extract JWT tokens from query string for scenarios like SignalR.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -918,7 +918,7 @@ app.Run();
 Customize error responses for authentication failures.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text.Json;
 
@@ -991,7 +991,7 @@ app.Run();
 Integrate KeyCloak authentication with SignalR hubs.
 
 ```csharp
-using KeyCloak.AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -1091,30 +1091,30 @@ public class ChatHub : Hub
 
 ---
 
-## Getting an KeyCloak Access Token
+## Getting a Keycloak Access Token
 
-To test these examples, you'll need an access token from KeyCloak. Here's how to get one:
+To test these examples, you'll need an access token from Keycloak. Here's how to get one:
 
-### Using cURL
+### Using cURL (client credentials flow)
 
 ```bash
 curl --request POST \
-  --url https://your-tenant.KeyCloak.com/oauth/token \
-  --header 'content-type: application/json' \
-  --data '{
-    "client_id": "YOUR_CLIENT_ID",
-    "client_secret": "YOUR_CLIENT_SECRET",
-    "audience": "https://your-api-identifier",
-    "grant_type": "client_credentials"
-  }'
+  --url 'https://your-keycloak-host/realms/your-realm/protocol/openid-connect/token' \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data grant_type=client_credentials \
+  --data client_id=YOUR_CLIENT_ID \
+  --data client_secret=YOUR_CLIENT_SECRET \
+  --data audience=YOUR_API_AUDIENCE
 ```
+
+For the Aspire playground, Keycloak runs on `https://localhost:3443` with realm `test`.
 
 ### Making Authenticated Requests
 
 ```bash
 # Replace YOUR_ACCESS_TOKEN with the token from above
 curl --request GET \
-  --url https://localhost:5000/api/protected \
+  --url https://localhost:3445/api/protected \
   --header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
 ```
 
@@ -1122,10 +1122,10 @@ curl --request GET \
 
 ## Additional Resources
 
-- [KeyCloak Documentation](https://KeyCloak.com/docs)
+- [RFC 9449 - DPoP](https://datatracker.ietf.org/doc/html/rfc9449)
 - [ASP.NET Core Authentication Documentation](https://docs.microsoft.com/aspnet/core/security/authentication/)
 - [JWT Bearer Authentication](https://docs.microsoft.com/aspnet/core/security/authentication/jwt-authn)
-- [KeyCloak Community](https://community.KeyCloak.com/)
+- [Keycloak Documentation](https://www.keycloak.org/documentation)
 
 ---
 
@@ -1134,5 +1134,4 @@ curl --request GET \
 If you have questions or need help with these examples:
 
 - 📖 Check the [main README](README.md) for overview and setup instructions
-- 💬 Visit the [KeyCloak Community](https://community.KeyCloak.com/)
-- 🐛 Report issues on [GitHub Issues](https://github.com/KeyCloak/aspnetcore-api/issues)
+- 🐛 Report issues on [GitHub Issues](https://github.com/ChrisMcKee/aspnet-jwt-dpop/issues)

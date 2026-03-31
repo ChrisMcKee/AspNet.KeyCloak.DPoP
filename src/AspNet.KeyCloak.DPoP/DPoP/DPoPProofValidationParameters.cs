@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     Encapsulates all parameters required for validating a DPoP proof token in the KeyCloak ASP.NET Core API Authentication

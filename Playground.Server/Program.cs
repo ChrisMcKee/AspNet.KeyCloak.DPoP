@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-using AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

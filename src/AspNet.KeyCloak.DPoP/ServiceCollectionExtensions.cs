@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.Authentication.Api;
+namespace AspNet.KeyCloak.DPoP;
 
 /// <summary>
 ///     Contains

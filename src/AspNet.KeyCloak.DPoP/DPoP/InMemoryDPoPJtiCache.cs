@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
 
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     In-process <see cref="IDPoPJtiCache" /> backed by <see cref="IMemoryCache" />.

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.Authentication.Api;
+namespace AspNet.KeyCloak.DPoP;
 
 /// <summary>
 ///     Builder to add functionality on top of KeyCloak API authentication.

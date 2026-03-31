@@ -1,6 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     Options for configuring DPoP support.

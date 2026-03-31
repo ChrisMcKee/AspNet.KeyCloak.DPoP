@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     Provides a factory for creating configured JwtBearerEvents instances

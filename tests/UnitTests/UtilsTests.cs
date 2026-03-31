@@ -1,6 +1,6 @@
 using System.Text;
 
-using AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 
 namespace UnitTests;
 

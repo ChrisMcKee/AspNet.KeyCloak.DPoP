@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 
-using AspNetCore.Authentication.Api.DPoP;
-using AspNetCore.Authentication.Api.DPoP.EventHandlers;
+using AspNet.KeyCloak.DPoP.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP.EventHandlers;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 [assembly: InternalsVisibleTo("UnitTests")]
 
-namespace AspNetCore.Authentication.Api;
+namespace AspNet.KeyCloak.DPoP;
 
 /// <summary>
 ///     Provides extension methods for

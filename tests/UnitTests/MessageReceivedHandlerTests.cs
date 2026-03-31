@@ -1,8 +1,8 @@
 using System.Net;
 
-using AspNetCore.Authentication.Api;
-using AspNetCore.Authentication.Api.DPoP;
-using AspNetCore.Authentication.Api.DPoP.EventHandlers;
+using AspNet.KeyCloak.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP.EventHandlers;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-using AspNetCore.Authentication.Api.DPoP.EventHandlers;
+using AspNet.KeyCloak.DPoP.DPoP.EventHandlers;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 [assembly: InternalsVisibleTo("IntegrationTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
-namespace AspNetCore.Authentication.Api.DPoP;
+namespace AspNet.KeyCloak.DPoP.DPoP;
 
 /// <summary>
 ///     Provides event handlers for Demonstrating Proof-of-Possession (DPoP) authentication scenarios.

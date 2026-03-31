@@ -1,4 +1,4 @@
-using AspNetCore.Authentication.Api;
+using AspNet.KeyCloak.DPoP;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

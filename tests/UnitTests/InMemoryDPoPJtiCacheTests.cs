@@ -1,4 +1,4 @@
-using AspNetCore.Authentication.Api.DPoP;
+using AspNet.KeyCloak.DPoP.DPoP;
 
 namespace UnitTests;
 

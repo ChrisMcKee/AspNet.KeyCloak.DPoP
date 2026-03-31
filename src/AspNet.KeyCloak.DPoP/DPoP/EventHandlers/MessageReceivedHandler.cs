@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Authentication.Api.DPoP.EventHandlers;
+namespace AspNet.KeyCloak.DPoP.DPoP.EventHandlers;
 
 public class MessageReceivedHandler : DPoPEventHandlerBase, IDPoPEventHandler<MessageReceivedContext>
 {

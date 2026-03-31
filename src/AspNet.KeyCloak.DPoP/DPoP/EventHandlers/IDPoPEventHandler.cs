@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace AspNetCore.Authentication.Api.DPoP.EventHandlers;
+namespace AspNet.KeyCloak.DPoP.DPoP.EventHandlers;
 
 public interface IDPoPEventHandler<T>
 {
