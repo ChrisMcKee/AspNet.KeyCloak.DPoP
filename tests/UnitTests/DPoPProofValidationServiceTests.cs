@@ -663,6 +663,59 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
+    public async Task ValidateDPoPPayloadAsync_ShouldSetError_WhenJtiIsReplayed()
+    {
+        var replayingCache = A.Fake<IDPoPJtiCache>();
+        A.CallTo(() => replayingCache.TryAddAsync(A<string>._, A<TimeSpan>._, A<CancellationToken>._))
+            .Returns(false); // every jti is a replay
+
+        var service = new DPoPProofValidationService(replayingCache);
+        DPoPProofValidationParameters parameters = TestUtilities.CreateValidationParameters();
+        var validationResult = new DPoPProofValidationResult
+        {
+            ProofClaims = new Dictionary<string, object>
+            {
+                { KeyCloakConstants.DPoP.Ath, service.ComputeAccessTokenHash("dummy-access-token") },
+                { KeyCloakConstants.DPoP.Jti, "replay-jti" },
+                { KeyCloakConstants.DPoP.Htm, "GET" },
+                { KeyCloakConstants.DPoP.Htu, "https://example.com/api" },
+                { KeyCloakConstants.DPoP.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
+            }
+        };
+
+        await service.ValidateDPoPPayloadAsync(parameters, validationResult);
+
+        validationResult.HasError.Should().BeTrue();
+        validationResult.Error.Should().Be(KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof);
+    }
+
+    [Fact]
+    public async Task ValidateDPoPPayloadAsync_ShouldNotSetError_WhenJtiIsFirstSeen()
+    {
+        var freshCache = A.Fake<IDPoPJtiCache>();
+        A.CallTo(() => freshCache.TryAddAsync(A<string>._, A<TimeSpan>._, A<CancellationToken>._))
+            .Returns(true); // every jti is new
+
+        var service = new DPoPProofValidationService(freshCache);
+        DPoPProofValidationParameters parameters = TestUtilities.CreateValidationParameters();
+        var validationResult = new DPoPProofValidationResult
+        {
+            ProofClaims = new Dictionary<string, object>
+            {
+                { KeyCloakConstants.DPoP.Ath, service.ComputeAccessTokenHash("dummy-access-token") },
+                { KeyCloakConstants.DPoP.Jti, "fresh-jti" },
+                { KeyCloakConstants.DPoP.Htm, "GET" },
+                { KeyCloakConstants.DPoP.Htu, "https://example.com/api" },
+                { KeyCloakConstants.DPoP.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
+            }
+        };
+
+        await service.ValidateDPoPPayloadAsync(parameters, validationResult);
+
+        validationResult.HasError.Should().BeFalse();
+    }
+
+    [Fact]
     public void ComputeAccessTokenHash_ValidAccessToken_ReturnsBase64UrlEncodedSha256Hash()
     {
         var accessToken = "valid.jwt.token";
@@ -1319,7 +1372,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_Sets_Error_When_ProofClaims_Is_Null_Or_Invalid()
+    public async Task ValidateDPoPPayload_Sets_Error_When_ProofClaims_Is_Null_Or_Invalid()
     {
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         var validationResult = new DPoPProofValidationResult
@@ -1327,7 +1380,7 @@ public class DPoPProofValidationServiceTests
             ProofClaims = null
         };
 
-        _service.ValidateDPoPPayload(validationParameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(validationParameters, validationResult);
 
         validationResult.HasError.Should().BeTrue();
         validationResult.Error.Should().Be(KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof);
@@ -1335,7 +1388,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_Sets_Error_When_AccessTokenHash_Does_Not_Match()
+    public async Task ValidateDPoPPayload_Sets_Error_When_AccessTokenHash_Does_Not_Match()
     {
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         var validationResult = new DPoPProofValidationResult
@@ -1350,7 +1403,7 @@ public class DPoPProofValidationServiceTests
             }
         };
 
-        _service.ValidateDPoPPayload(validationParameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(validationParameters, validationResult);
 
         validationResult.HasError.Should().BeTrue();
         validationResult.Error.Should().Be(KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof);
@@ -1358,7 +1411,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_sets_error_when_JtiClaim_is_missing()
+    public async Task ValidateDPoPPayload_sets_error_when_JtiClaim_is_missing()
     {
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         var validationResult = new DPoPProofValidationResult
@@ -1372,7 +1425,7 @@ public class DPoPProofValidationServiceTests
             }
         };
 
-        _service.ValidateDPoPPayload(validationParameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(validationParameters, validationResult);
 
         validationResult.HasError.Should().BeTrue();
         validationResult.Error.Should().Be(KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof);
@@ -1380,7 +1433,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_Sets_Error_hen_HtmClaim_Does_Not_Match()
+    public async Task ValidateDPoPPayload_Sets_Error_hen_HtmClaim_Does_Not_Match()
     {
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         var validationResult = new DPoPProofValidationResult
@@ -1395,7 +1448,7 @@ public class DPoPProofValidationServiceTests
             }
         };
 
-        _service.ValidateDPoPPayload(validationParameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(validationParameters, validationResult);
 
         validationResult.HasError.Should().BeTrue();
         validationResult.Error.Should().Be(KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof);
@@ -1403,7 +1456,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_Sets_Error_When_HtuClaim_Does_Not_Match()
+    public async Task ValidateDPoPPayload_Sets_Error_When_HtuClaim_Does_Not_Match()
     {
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         var validationResult = new DPoPProofValidationResult
@@ -1418,7 +1471,7 @@ public class DPoPProofValidationServiceTests
             }
         };
 
-        _service.ValidateDPoPPayload(validationParameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(validationParameters, validationResult);
 
         validationResult.HasError.Should().BeTrue();
         validationResult.Error.Should().Be(KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof);
@@ -1426,7 +1479,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_sets_error_when_IatClaim_is_invalid()
+    public async Task ValidateDPoPPayload_sets_error_when_IatClaim_is_invalid()
     {
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         var validationResult = new DPoPProofValidationResult
@@ -1441,7 +1494,7 @@ public class DPoPProofValidationServiceTests
             }
         };
 
-        _service.ValidateDPoPPayload(validationParameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(validationParameters, validationResult);
 
         validationResult.HasError.Should().BeTrue();
         validationResult.Error.Should().Be(KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof);
@@ -1449,7 +1502,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_succeeds_with_valid_claims()
+    public async Task ValidateDPoPPayload_succeeds_with_valid_claims()
     {
         var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var validationParameters = new DPoPProofValidationParameters
@@ -1476,7 +1529,7 @@ public class DPoPProofValidationServiceTests
             }
         };
 
-        _service.ValidateDPoPPayload(validationParameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(validationParameters, validationResult);
 
         validationResult.HasError.Should().BeFalse();
     }
@@ -1853,7 +1906,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_Sets_Error_When_ProofClaims_Is_Empty()
+    public async Task ValidateDPoPPayload_Sets_Error_When_ProofClaims_Is_Empty()
     {
         DPoPProofValidationParameters parameters = TestUtilities.CreateValidationParameters();
         var validationResult = new DPoPProofValidationResult
@@ -1861,7 +1914,7 @@ public class DPoPProofValidationServiceTests
             ProofClaims = new Dictionary<string, object>()
         };
 
-        _service.ValidateDPoPPayload(parameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(parameters, validationResult);
 
         validationResult.HasError.Should().BeTrue();
         validationResult.Error.Should().Be(KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof);
@@ -2297,7 +2350,7 @@ public class DPoPProofValidationServiceTests
     }
 
     [Fact]
-    public void ValidateDPoPPayload_WithAllValidClaims_DoesNotSetError()
+    public async Task ValidateDPoPPayload_WithAllValidClaims_DoesNotSetError()
     {
         var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var accessToken = "test.access.token";
@@ -2328,7 +2381,7 @@ public class DPoPProofValidationServiceTests
             }
         };
 
-        _service.ValidateDPoPPayload(parameters, validationResult);
+        await _service.ValidateDPoPPayloadAsync(parameters, validationResult);
 
         validationResult.HasError.Should().BeFalse();
     }
