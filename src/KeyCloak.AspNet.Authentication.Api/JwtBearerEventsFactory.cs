@@ -9,21 +9,21 @@ internal abstract class JwtBearerEventsFactory
 {
     /// <summary>
     ///     Creates a new instance of <see cref="JwtBearerEvents" /> and assigns event handlers
-    ///     based on the provided <paramref name="KeyCloakOptions" />
+    ///     based on the provided <paramref name="keyCloakOptions" />
     /// </summary>
     /// <returns>A configured <see cref="JwtBearerEvents" /> instance.</returns>
-    /// <param name="KeyCloakOptions">The KeyCloak API options containing custom event handlers.</param>
-    internal static JwtBearerEvents Create(KeyCloakApiOptions? KeyCloakOptions)
+    /// <param name="keyCloakOptions">The KeyCloak API options containing custom event handlers.</param>
+    internal static JwtBearerEvents Create(KeyCloakApiOptions? keyCloakOptions)
     {
-        ArgumentNullException.ThrowIfNull(KeyCloakOptions);
+        ArgumentNullException.ThrowIfNull(keyCloakOptions);
 
         return new JwtBearerEvents
         {
-            OnTokenValidated = ProxyEvent(KeyCloakOptions.JwtBearerOptions?.Events?.OnTokenValidated),
-            OnAuthenticationFailed = ProxyEvent(KeyCloakOptions.JwtBearerOptions?.Events?.OnAuthenticationFailed),
-            OnMessageReceived = ProxyEvent(KeyCloakOptions.JwtBearerOptions?.Events?.OnMessageReceived),
-            OnChallenge = ProxyEvent(KeyCloakOptions.JwtBearerOptions?.Events?.OnChallenge),
-            OnForbidden = ProxyEvent(KeyCloakOptions.JwtBearerOptions?.Events?.OnForbidden)
+            OnTokenValidated = ProxyEvent(keyCloakOptions.JwtBearerOptions?.Events?.OnTokenValidated),
+            OnAuthenticationFailed = ProxyEvent(keyCloakOptions.JwtBearerOptions?.Events?.OnAuthenticationFailed),
+            OnMessageReceived = ProxyEvent(keyCloakOptions.JwtBearerOptions?.Events?.OnMessageReceived),
+            OnChallenge = ProxyEvent(keyCloakOptions.JwtBearerOptions?.Events?.OnChallenge),
+            OnForbidden = ProxyEvent(keyCloakOptions.JwtBearerOptions?.Events?.OnForbidden)
         };
     }
 

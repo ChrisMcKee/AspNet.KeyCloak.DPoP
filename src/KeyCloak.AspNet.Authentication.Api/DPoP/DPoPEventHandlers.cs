@@ -5,7 +5,7 @@ using AspNetCore.Authentication.Api.DPoP.EventHandlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: InternalsVisibleTo("KeyCloak.AspNetCore.Authentication.Api.UnitTests")]
+[assembly: InternalsVisibleTo("KeyCloak.AspNet.Authentication.Api.UnitTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace AspNetCore.Authentication.Api.DPoP;

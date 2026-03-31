@@ -10,7 +10,7 @@
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 
-    <PackageId>KeyCloak.AspNetCore.Authentication.Api</PackageId>
+    <PackageId>KeyCloak.AspNet.Authentication.Api</PackageId>
     <Product>Auth0 ASP.NET Core API Authentication</Product>
 
     <Title>ASP.NET Core API Authentication</Title>

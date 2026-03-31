@@ -311,7 +311,7 @@ For comprehensive, copy-pastable code examples covering various scenarios, see *
 Clone the repository and build the solution:
 
 ```bash
-git clone https://github.com/KeyCloak/aspnetcore-api.git
+git clone https://github.com/ChrisMcKee/keycloak-dpo-api.git
 cd aspnetcore-api
 dotnet restore KeyCloak.AspNetCore.Authentication.Api.sln
 dotnet build KeyCloak.AspNetCore.Authentication.Api.sln --configuration Release

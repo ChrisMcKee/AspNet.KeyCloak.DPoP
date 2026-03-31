@@ -5,11 +5,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0B53C7D8-A51
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BAE9027D-C55C-4866-BB1B-EA29DF6EA0D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyCloak.AspNetCore.Authentication.Api", "src\KeyCloak.AspNetCore.Authentication.Api\KeyCloak.AspNetCore.Authentication.Api.csproj", "{9F805146-40E5-4336-94B1-2CDA18FB0FDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyCloak.AspNet.Authentication.Api", "src\KeyCloak.AspNet.Authentication.Api\KeyCloak.AspNet.Authentication.Api.csproj", "{9F805146-40E5-4336-94B1-2CDA18FB0FDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Authentication.Api.UnitTests", "tests\AspNetCore.Authentication.Api.UnitTests\AspNetCore.Authentication.Api.UnitTests.csproj", "{56B4DCE0-BCAF-465B-A57D-7736320FDE0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{56B4DCE0-BCAF-465B-A57D-7736320FDE0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Authentication.Api.IntegrationTests", "tests\AspNetCore.Authentication.Api.IntegrationTests\AspNetCore.Authentication.Api.IntegrationTests.csproj", "{E8F9A7D3-1C4B-4F5E-9B2D-8A3C7E6D9F1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{E8F9A7D3-1C4B-4F5E-9B2D-8A3C7E6D9F1A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "playground", "playground", "{46FFC87C-000A-43E7-8CEF-0FA6DE0F6E8C}"
 EndProject
