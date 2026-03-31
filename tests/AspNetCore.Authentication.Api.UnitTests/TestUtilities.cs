@@ -12,8 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-using Moq;
-
 namespace UnitTests;
 
 internal static class TestUtilities
@@ -31,13 +29,14 @@ internal static class TestUtilities
     }
 
 
-    internal static Mock<MessageReceivedContext> CreateMessageReceivedContextMock()
+    internal static MessageReceivedContext CreateMessageReceivedContextMock()
     {
-        var contextMock = new Mock<MessageReceivedContext>(
+        return A.Fake<MessageReceivedContext>(o => o.WithArgumentsForConstructor(new object[]
+        {
             new DefaultHttpContext(),
             new AuthenticationScheme("KeyCloak", null, typeof(JwtBearerHandler)),
-            new JwtBearerOptions());
-        return contextMock;
+            new JwtBearerOptions()
+        }));
     }
 
     internal static MessageReceivedContext CreateMessageReceivedContext()

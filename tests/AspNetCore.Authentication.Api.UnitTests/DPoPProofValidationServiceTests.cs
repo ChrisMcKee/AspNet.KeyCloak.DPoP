@@ -7,8 +7,6 @@ using AspNetCore.Authentication.Api.DPoP;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-using Moq;
-
 namespace UnitTests;
 
 public class DPoPProofValidationServiceTests
@@ -1082,8 +1080,8 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public async Task ValidateTokenSignature_Should_Not_Set_ProofClaims_When_TokenValidationResult_Has_Exception()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler.Object);
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler);
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         DPoPProofValidationResult validationResult = TestUtilities.CreateValidationResultWithJsonWebKey();
         var tokenValidationResult = new TokenValidationResult
@@ -1091,9 +1089,8 @@ public class DPoPProofValidationServiceTests
             Exception = new SecurityTokenValidationException("Invalid token")
         };
 
-        mockTokenHandler
-            .Setup(x => x.ValidateTokenAsync(validationParameters.ProofToken, It.IsAny<TokenValidationParameters>()))
-            .ReturnsAsync(tokenValidationResult);
+        A.CallTo(() => mockTokenHandler.ValidateTokenAsync(validationParameters.ProofToken, A<TokenValidationParameters>._))
+            .Returns(tokenValidationResult);
 
         await service.ValidateTokenSignature(validationParameters, validationResult);
 
@@ -1103,14 +1100,13 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public async Task ValidateTokenSignature_Should_Not_Set_ProofClaims_When_TokenValidationResult_Is_Null()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler.Object);
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler);
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         DPoPProofValidationResult validationResult = TestUtilities.CreateValidationResultWithJsonWebKey();
 
-        mockTokenHandler
-            .Setup(x => x.ValidateTokenAsync(validationParameters.ProofToken, It.IsAny<TokenValidationParameters>()))
-            .ReturnsAsync((TokenValidationResult)null);
+        A.CallTo(() => mockTokenHandler.ValidateTokenAsync(validationParameters.ProofToken, A<TokenValidationParameters>._))
+            .Returns((TokenValidationResult?)null);
 
         await service.ValidateTokenSignature(validationParameters, validationResult);
 
@@ -1120,14 +1116,13 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public async Task ValidateTokenSignature_Should_Not_Throw_When_TokenHandler_Throws_Exception()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler.Object);
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler);
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         DPoPProofValidationResult validationResult = TestUtilities.CreateValidationResultWithJsonWebKey();
 
-        mockTokenHandler
-            .Setup(x => x.ValidateTokenAsync(validationParameters.ProofToken, It.IsAny<TokenValidationParameters>()))
-            .ThrowsAsync(new SecurityTokenException("Token validation failed"));
+        A.CallTo(() => mockTokenHandler.ValidateTokenAsync(validationParameters.ProofToken, A<TokenValidationParameters>._))
+            .Returns(Task.FromException<TokenValidationResult>(new SecurityTokenException("Token validation failed")));
 
         Func<Task> act = async () => await service.ValidateTokenSignature(validationParameters, validationResult);
 
@@ -1138,8 +1133,8 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public async Task ValidateTokenSignature_Should_Not_Throw_When_JsonWebKey_Creation_Throws_Exception()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler.Object);
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler);
         DPoPProofValidationParameters validationParameters = TestUtilities.CreateValidationParameters();
         var validationResult = new DPoPProofValidationResult
         {
@@ -1281,11 +1276,11 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public void TryParseProofToken_TokenHandlerThrowsException_ReturnsFalseAndNullToken()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        mockTokenHandler.Setup(x => x.ReadJsonWebToken(It.IsAny<string>()))
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        A.CallTo(() => mockTokenHandler.ReadJsonWebToken(A<string>._))
             .Throws(new ArgumentException("Invalid token"));
 
-        _service.TokenHandler = mockTokenHandler.Object;
+        _service.TokenHandler = mockTokenHandler;
 
         var result = _service.TryParseProofToken("any.token.here", out JsonWebToken? token);
 
@@ -1296,11 +1291,11 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public void TryParseProofToken_JsonExceptionFromTokenHandler_ReturnsFalseAndNullToken()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        mockTokenHandler.Setup(x => x.ReadJsonWebToken(It.IsAny<string>()))
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        A.CallTo(() => mockTokenHandler.ReadJsonWebToken(A<string>._))
             .Throws(new JsonException("Invalid JSON"));
 
-        _service.TokenHandler = mockTokenHandler.Object;
+        _service.TokenHandler = mockTokenHandler;
 
         var result = _service.TryParseProofToken("invalid.json.token", out JsonWebToken? token);
 
@@ -1311,11 +1306,11 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public void TryParseProofToken_SecurityTokenMalformedExceptionFromTokenHandler_ReturnsFalseAndNullToken()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        mockTokenHandler.Setup(x => x.ReadJsonWebToken(It.IsAny<string>()))
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        A.CallTo(() => mockTokenHandler.ReadJsonWebToken(A<string>._))
             .Throws(new SecurityTokenMalformedException("Malformed token"));
 
-        _service.TokenHandler = mockTokenHandler.Object;
+        _service.TokenHandler = mockTokenHandler;
 
         var result = _service.TryParseProofToken("malformed.token.here", out JsonWebToken? token);
 
@@ -1602,11 +1597,11 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public async Task ValidateDPoPHeaderTokenAsync_InvalidJwkJson_SetsError()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler.Object);
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler);
         JsonWebToken tokenWithInvalidJwk = TestUtilities.CreateTokenWithInvalidJwkJson();
 
-        mockTokenHandler.Setup(h => h.ReadJsonWebToken(It.IsAny<string>())).Returns(tokenWithInvalidJwk);
+        A.CallTo(() => mockTokenHandler.ReadJsonWebToken(A<string>._)).Returns(tokenWithInvalidJwk);
 
         DPoPProofValidationParameters
             parameters = TestUtilities.CreateDPoPProofValidationParametersWithInvalidJwkJson();
@@ -1621,13 +1616,13 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public async Task ValidateDPoPHeaderTokenAsync_SetsJsonWebKeyAndThumbprint_WhenValid()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler.Object);
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler);
         JsonWebToken tokenWithValidJwk = TestUtilities.CreateTokenWithComplexJwkHeader();
 
-        mockTokenHandler.Setup(h => h.ReadJsonWebToken(It.IsAny<string>())).Returns(tokenWithValidJwk);
-        mockTokenHandler.Setup(h => h.ValidateTokenAsync(It.IsAny<string>(), It.IsAny<TokenValidationParameters>()))
-            .ReturnsAsync(new TokenValidationResult
+        A.CallTo(() => mockTokenHandler.ReadJsonWebToken(A<string>._)).Returns(tokenWithValidJwk);
+        A.CallTo(() => mockTokenHandler.ValidateTokenAsync(A<string>._, A<TokenValidationParameters>._))
+            .Returns(new TokenValidationResult
             {
                 IsValid = true,
                 ClaimsIdentity = new ClaimsIdentity()
@@ -1646,16 +1641,16 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public async Task ValidateDPoPHeaderTokenAsync_CallsValidateTokenSignature()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler.Object);
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler);
         JsonWebToken tokenWithValidJwk = TestUtilities.CreateTokenWithComplexJwkHeader();
 
-        mockTokenHandler.Setup(h => h.ReadJsonWebToken(It.IsAny<string>())).Returns(tokenWithValidJwk);
+        A.CallTo(() => mockTokenHandler.ReadJsonWebToken(A<string>._)).Returns(tokenWithValidJwk);
 
         var validateTokenAsyncCalled = false;
-        mockTokenHandler.Setup(h => h.ValidateTokenAsync(It.IsAny<string>(), It.IsAny<TokenValidationParameters>()))
-            .Callback(() => validateTokenAsyncCalled = true)
-            .ReturnsAsync(new TokenValidationResult
+        A.CallTo(() => mockTokenHandler.ValidateTokenAsync(A<string>._, A<TokenValidationParameters>._))
+            .Invokes(() => validateTokenAsyncCalled = true)
+            .Returns(new TokenValidationResult
             {
                 IsValid = true,
                 ClaimsIdentity = new ClaimsIdentity()
@@ -1960,8 +1955,8 @@ public class DPoPProofValidationServiceTests
     [Fact]
     public async Task ValidateTokenSignature_SetsProofClaims_When_ValidationSucceeds()
     {
-        var mockTokenHandler = new Mock<JsonWebTokenHandler>();
-        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler.Object);
+        var mockTokenHandler = A.Fake<JsonWebTokenHandler>();
+        DPoPProofValidationService service = TestUtilities.CreateServiceWithMockTokenHandler(mockTokenHandler);
 
         var claimsIdentity = new ClaimsIdentity(new[]
         {
@@ -1971,8 +1966,8 @@ public class DPoPProofValidationServiceTests
             new Claim(KeyCloakConstants.DPoP.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
         });
 
-        mockTokenHandler.Setup(h => h.ValidateTokenAsync(It.IsAny<string>(), It.IsAny<TokenValidationParameters>()))
-            .ReturnsAsync(new TokenValidationResult
+        A.CallTo(() => mockTokenHandler.ValidateTokenAsync(A<string>._, A<TokenValidationParameters>._))
+            .Returns(new TokenValidationResult
             {
                 IsValid = true,
                 ClaimsIdentity = claimsIdentity

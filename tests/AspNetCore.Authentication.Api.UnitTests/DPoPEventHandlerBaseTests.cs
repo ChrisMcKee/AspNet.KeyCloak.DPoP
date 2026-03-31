@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
-using Moq;
-
 namespace UnitTests;
 
 public class DPoPEventHandlerBaseTests
@@ -51,10 +49,10 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void IsDPoPScheme_Should_Return_True_When_Authorization_Header_Starts_With_DPoP_Scheme()
     {
-        Mock<HttpRequest> mockRequest =
+        HttpRequest mockRequest =
             CreateMockRequestWithAuthorizationHeader($"{KeyCloakConstants.DPoP.AuthenticationScheme} token");
 
-        var result = _handler.IsDPoPScheme(mockRequest.Object);
+        var result = _handler.IsDPoPScheme(mockRequest);
 
         result.Should().BeTrue();
     }
@@ -62,11 +60,11 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void IsDPoPScheme_Should_Return_True_When_Authorization_Header_Starts_With_DPoP_Scheme_Case_Insensitive()
     {
-        Mock<HttpRequest> mockRequest =
+        HttpRequest mockRequest =
             CreateMockRequestWithAuthorizationHeader(
                 $"{KeyCloakConstants.DPoP.AuthenticationScheme.ToUpperInvariant()} token");
 
-        var result = _handler.IsDPoPScheme(mockRequest.Object);
+        var result = _handler.IsDPoPScheme(mockRequest);
 
         result.Should().BeTrue();
     }
@@ -74,9 +72,9 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void IsDPoPScheme_Should_Return_False_When_Authorization_Header_Does_Not_Start_With_DPoP_Scheme()
     {
-        Mock<HttpRequest> mockRequest = CreateMockRequestWithAuthorizationHeader("Bearer token");
+        HttpRequest mockRequest = CreateMockRequestWithAuthorizationHeader("Bearer token");
 
-        var result = _handler.IsDPoPScheme(mockRequest.Object);
+        var result = _handler.IsDPoPScheme(mockRequest);
 
         result.Should().BeFalse();
     }
@@ -84,9 +82,9 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void IsDPoPScheme_Should_Return_False_When_Authorization_Header_Is_Null()
     {
-        Mock<HttpRequest> mockRequest = CreateMockRequestWithAuthorizationHeader();
+        HttpRequest mockRequest = CreateMockRequestWithAuthorizationHeader();
 
-        var result = _handler.IsDPoPScheme(mockRequest.Object);
+        var result = _handler.IsDPoPScheme(mockRequest);
 
         result.Should().BeFalse();
     }
@@ -94,9 +92,9 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void GetAuthorizationHeader_Should_Return_First_Authorization_Header_Value()
     {
-        Mock<HttpRequest> mockRequest = CreateMockRequestWithAuthorizationHeader(new[] { "first", "second" });
+        HttpRequest mockRequest = CreateMockRequestWithAuthorizationHeader(new[] { "first", "second" });
 
-        var result = _handler.GetAuthorizationHeader(mockRequest.Object);
+        var result = _handler.GetAuthorizationHeader(mockRequest);
 
         result.Should().Be("first");
     }
@@ -104,9 +102,9 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void GetAuthorizationHeader_Should_Return_Null_When_No_Authorization_Header_Present()
     {
-        Mock<HttpRequest> mockRequest = CreateMockRequestWithAuthorizationHeader();
+        HttpRequest mockRequest = CreateMockRequestWithAuthorizationHeader();
 
-        var result = _handler.GetAuthorizationHeader(mockRequest.Object);
+        var result = _handler.GetAuthorizationHeader(mockRequest);
 
         result.Should().BeNull();
     }
@@ -292,9 +290,9 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void IsDPoPScheme_Should_Return_False_When_Header_Is_Shorter_Than_Scheme()
     {
-        Mock<HttpRequest> mockRequest = CreateMockRequestWithAuthorizationHeader("DP");
+        HttpRequest mockRequest = CreateMockRequestWithAuthorizationHeader("DP");
 
-        var result = _handler.IsDPoPScheme(mockRequest.Object);
+        var result = _handler.IsDPoPScheme(mockRequest);
 
         result.Should().BeFalse();
     }
@@ -302,10 +300,10 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void IsDPoPScheme_Should_Return_False_When_Header_Equals_Scheme_But_No_Space()
     {
-        Mock<HttpRequest> mockRequest =
+        HttpRequest mockRequest =
             CreateMockRequestWithAuthorizationHeader(KeyCloakConstants.DPoP.AuthenticationScheme.TrimEnd());
 
-        var result = _handler.IsDPoPScheme(mockRequest.Object);
+        var result = _handler.IsDPoPScheme(mockRequest);
 
         result.Should().BeFalse();
     }
@@ -316,9 +314,9 @@ public class DPoPEventHandlerBaseTests
     [InlineData("DpOp token")]
     public void IsDPoPScheme_Should_Handle_Case_Variations_Correctly(string authHeader)
     {
-        Mock<HttpRequest> mockRequest = CreateMockRequestWithAuthorizationHeader(authHeader);
+        HttpRequest mockRequest = CreateMockRequestWithAuthorizationHeader(authHeader);
 
-        var result = _handler.IsDPoPScheme(mockRequest.Object);
+        var result = _handler.IsDPoPScheme(mockRequest);
 
         result.Should().BeTrue();
     }
@@ -411,10 +409,10 @@ public class DPoPEventHandlerBaseTests
     [Fact]
     public void GetAuthorizationHeader_Should_Return_First_Header_When_Multiple_Same_Headers_Present()
     {
-        Mock<HttpRequest> mockRequest =
+        HttpRequest mockRequest =
             CreateMockRequestWithAuthorizationHeader(new[] { "first_token", "second_token", "third_token" });
 
-        var result = _handler.GetAuthorizationHeader(mockRequest.Object);
+        var result = _handler.GetAuthorizationHeader(mockRequest);
 
         result.Should().Be("first_token");
     }
@@ -456,20 +454,20 @@ public class DPoPEventHandlerBaseTests
         context.Token.Should().BeNull();
     }
 
-    private Mock<HttpRequest> CreateMockRequestWithAuthorizationHeader(string? authorizationValue = null)
+    private HttpRequest CreateMockRequestWithAuthorizationHeader(string? authorizationValue = null)
     {
-        var mockRequest = new Mock<HttpRequest>();
+        var mockRequest = A.Fake<HttpRequest>();
         StringValues headerValues = string.IsNullOrEmpty(authorizationValue)
             ? new StringValues()
             : new StringValues(authorizationValue);
-        mockRequest.Setup(r => r.Headers.Authorization).Returns(headerValues);
+        A.CallTo(() => mockRequest.Headers.Authorization).Returns(headerValues);
         return mockRequest;
     }
 
-    private Mock<HttpRequest> CreateMockRequestWithAuthorizationHeader(string[] authorizationValues)
+    private HttpRequest CreateMockRequestWithAuthorizationHeader(string[] authorizationValues)
     {
-        var mockRequest = new Mock<HttpRequest>();
-        mockRequest.Setup(r => r.Headers.Authorization).Returns(new StringValues(authorizationValues));
+        var mockRequest = A.Fake<HttpRequest>();
+        A.CallTo(() => mockRequest.Headers.Authorization).Returns(new StringValues(authorizationValues));
         return mockRequest;
     }
 

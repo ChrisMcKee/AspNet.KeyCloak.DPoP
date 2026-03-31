@@ -11,13 +11,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 
-using Moq;
-
 namespace UnitTests;
 
 public class TokenValidationHandlerTests
 {
-    private readonly Mock<IDPoPProofValidationService> _mockValidationService = new();
+    private readonly IDPoPProofValidationService _mockValidationService = A.Fake<IDPoPProofValidationService>();
 
     [Theory]
     [InlineData("https", "example.com", 443, "/api/values", "", "https://example.com/api/values")]
@@ -208,13 +206,12 @@ public class TokenValidationHandlerTests
     [Fact]
     public async Task ValidateAsyncInternal_ReturnsValidationResult_WhenServiceReturnsResult()
     {
-        var serviceMock = new Mock<IDPoPProofValidationService>();
-        var handler = new TokenValidationHandler(serviceMock.Object);
+        var serviceMock = A.Fake<IDPoPProofValidationService>();
+        var handler = new TokenValidationHandler(serviceMock);
         TokenValidatedContext context = CreateTokenValidatedContextWithOptions();
         var expectedResult = new DPoPProofValidationResult();
-        serviceMock.Setup(
-                s => s.ValidateAsync(It.IsAny<DPoPProofValidationParameters>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedResult);
+        A.CallTo(() => serviceMock.ValidateAsync(A<DPoPProofValidationParameters>._, A<CancellationToken>._))
+            .Returns(expectedResult);
 
         DPoPProofValidationResult? result = await handler.ValidateAsyncInternal(context);
 
@@ -224,8 +221,8 @@ public class TokenValidationHandlerTests
     [Fact]
     public async Task ValidateAsyncInternal_ThrowsInvalidOperationException_WhenOptionsNotConfigured()
     {
-        var serviceMock = new Mock<IDPoPProofValidationService>();
-        var handler = new TokenValidationHandler(serviceMock.Object);
+        var serviceMock = A.Fake<IDPoPProofValidationService>();
+        var handler = new TokenValidationHandler(serviceMock);
         TokenValidatedContext context = CreateTokenValidatedContextWithoutOptions();
 
         Func<Task> act = async () => await handler.ValidateAsyncInternal(context);
@@ -237,14 +234,13 @@ public class TokenValidationHandlerTests
     [Fact]
     public async Task ValidateAsyncInternal_PassesCorrectParameters_ToValidationService()
     {
-        var serviceMock = new Mock<IDPoPProofValidationService>();
-        var handler = new TokenValidationHandler(serviceMock.Object);
+        var serviceMock = A.Fake<IDPoPProofValidationService>();
+        var handler = new TokenValidationHandler(serviceMock);
         TokenValidatedContext context = CreateTokenValidatedContextWithOptions();
         DPoPProofValidationParameters? capturedParams = null;
-        serviceMock.Setup(
-                s => s.ValidateAsync(It.IsAny<DPoPProofValidationParameters>(), It.IsAny<CancellationToken>()))
-            .Callback<DPoPProofValidationParameters, CancellationToken>((p, _) => capturedParams = p)
-            .ReturnsAsync(new DPoPProofValidationResult());
+        A.CallTo(() => serviceMock.ValidateAsync(A<DPoPProofValidationParameters>._, A<CancellationToken>._))
+            .Invokes((DPoPProofValidationParameters p, CancellationToken _) => capturedParams = p)
+            .Returns(new DPoPProofValidationResult());
 
         await handler.ValidateAsyncInternal(context);
 
@@ -354,12 +350,11 @@ public class TokenValidationHandlerTests
     public async Task HandleRequiredMode_ValidationServiceReturnsNull_NoErrorsCaptured()
     {
         TokenValidatedContext context = CreateTokenValidatedContextWithOptions();
-        var mockValidationService = new Mock<IDPoPProofValidationService>();
-        mockValidationService
-            .Setup(s => s.ValidateAsync(It.IsAny<DPoPProofValidationParameters>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((DPoPProofValidationResult?)null);
+        var mockValidationService = A.Fake<IDPoPProofValidationService>();
+        A.CallTo(() => mockValidationService.ValidateAsync(A<DPoPProofValidationParameters>._, A<CancellationToken>._))
+            .Returns((DPoPProofValidationResult?)null);
 
-        var handler = new TokenValidationHandler(mockValidationService.Object);
+        var handler = new TokenValidationHandler(mockValidationService);
         await handler.HandleRequiredMode(context);
 
         context.HttpContext.Items.ContainsKey(KeyCloakConstants.DPoP.DPoPErrorCode).Should().BeFalse();
@@ -373,12 +368,11 @@ public class TokenValidationHandlerTests
         var validationResult = new DPoPProofValidationResult();
         validationResult.SetError(KeyCloakConstants.DPoP.Error.Code.InvalidToken, null);
 
-        var mockValidationService = new Mock<IDPoPProofValidationService>();
-        mockValidationService.Setup(s =>
-                s.ValidateAsync(It.IsAny<DPoPProofValidationParameters>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+        var mockValidationService = A.Fake<IDPoPProofValidationService>();
+        A.CallTo(() => mockValidationService.ValidateAsync(A<DPoPProofValidationParameters>._, A<CancellationToken>._))
+            .Returns(validationResult);
 
-        var handler = new TokenValidationHandler(mockValidationService.Object);
+        var handler = new TokenValidationHandler(mockValidationService);
         await handler.HandleRequiredMode(context);
 
         context.HttpContext.Items[KeyCloakConstants.DPoP.DPoPErrorCode].Should()
@@ -396,12 +390,11 @@ public class TokenValidationHandlerTests
         var validationResult = new DPoPProofValidationResult();
         validationResult.SetError("some_unhandled_error", "unexpected");
 
-        var mockValidationService = new Mock<IDPoPProofValidationService>();
-        mockValidationService.Setup(s =>
-                s.ValidateAsync(It.IsAny<DPoPProofValidationParameters>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+        var mockValidationService = A.Fake<IDPoPProofValidationService>();
+        A.CallTo(() => mockValidationService.ValidateAsync(A<DPoPProofValidationParameters>._, A<CancellationToken>._))
+            .Returns(validationResult);
 
-        var handler = new TokenValidationHandler(mockValidationService.Object);
+        var handler = new TokenValidationHandler(mockValidationService);
         await handler.HandleRequiredMode(context);
 
         context.HttpContext.Items.ContainsKey(KeyCloakConstants.DPoP.DPoPErrorCode).Should().BeFalse();
@@ -424,7 +417,7 @@ public class TokenValidationHandlerTests
     [Fact]
     public void HandleDisabledMode_returns_completed_task()
     {
-        var handler = new TokenValidationHandler(new Mock<IDPoPProofValidationService>().Object);
+        var handler = new TokenValidationHandler(A.Fake<IDPoPProofValidationService>());
         TokenValidatedContext context = CreateTokenValidatedContext();
 
         Task task = handler.HandleDisabledMode(context);
@@ -452,8 +445,8 @@ public class TokenValidationHandlerTests
     [Fact]
     public void Handle_null_context_throws_ArgumentNullException()
     {
-        var svc = new Mock<IDPoPProofValidationService>();
-        var handler = new TestTokenValidationHandler(svc.Object);
+        var svc = A.Fake<IDPoPProofValidationService>();
+        var handler = new TestTokenValidationHandler(svc);
 
         Exception? ex = null;
         try
@@ -475,8 +468,8 @@ public class TokenValidationHandlerTests
     [InlineData(DPoPModes.Required, false, false, true)]
     public async Task Handle_InvokesCorrectHandler_BasedOnMode(DPoPModes mode, bool expectedDisabledCalled, bool expectedAllowedCalled, bool expectedRequiredCalled)
     {
-        var svc = new Mock<IDPoPProofValidationService>();
-        var handler = new TestTokenValidationHandler(svc.Object);
+        var svc = A.Fake<IDPoPProofValidationService>();
+        var handler = new TestTokenValidationHandler(svc);
         TokenValidatedContext context = CreateContext(mode);
 
         Task task = handler.Handle(context);
@@ -490,8 +483,8 @@ public class TokenValidationHandlerTests
     [Fact]
     public async Task Handle_unrecognized_mode_returns_completed_task_without_invoking_handlers()
     {
-        var svc = new Mock<IDPoPProofValidationService>();
-        var handler = new TestTokenValidationHandler(svc.Object);
+        var svc = A.Fake<IDPoPProofValidationService>();
+        var handler = new TestTokenValidationHandler(svc);
         TokenValidatedContext context = CreateContext((DPoPModes)999);
 
         Task task = handler.Handle(context);
@@ -505,9 +498,9 @@ public class TokenValidationHandlerTests
 
     private TokenValidationHandler CreateHandlerWithValidationResult(DPoPProofValidationResult? validationResult)
     {
-        _mockValidationService.Setup(s => s.ValidateAsync(It.IsAny<DPoPProofValidationParameters>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
-        return new TokenValidationHandler(_mockValidationService.Object);
+        A.CallTo(() => _mockValidationService.ValidateAsync(A<DPoPProofValidationParameters>._, A<CancellationToken>._))
+            .Returns(validationResult);
+        return new TokenValidationHandler(_mockValidationService);
     }
 
     private TokenValidatedContext CreateTokenValidatedContext(
@@ -570,12 +563,10 @@ public class TokenValidationHandlerTests
         var scheme = new AuthenticationScheme("KeyCloak", null, typeof(JwtBearerHandler));
         var options = new JwtBearerOptions();
 
-        var context = new Mock<TokenValidatedContext>(httpContext, scheme, options)
-        {
-            Object = { Principal = contextPrincipal }
-        };
+        var context = A.Fake<TokenValidatedContext>(o => o.WithArgumentsForConstructor(new object[] { httpContext, scheme, options }));
+        context.Principal = contextPrincipal;
 
-        return context.Object;
+        return context;
     }
 
     private TokenValidatedContext CreateTokenValidationContextWithBearerScheme()
@@ -631,7 +622,7 @@ public class TokenValidationHandlerTests
 
     private TokenValidationHandler CreateHandler()
     {
-        return new TokenValidationHandler(_mockValidationService.Object);
+        return new TokenValidationHandler(_mockValidationService);
     }
 
     private static void AssertDPoPErrorContext(TokenValidatedContext context, string expectedErrorCode, HttpStatusCode expectedStatusCode, string expectedErrorDescription)

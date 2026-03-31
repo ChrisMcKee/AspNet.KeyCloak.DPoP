@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-using Moq;
-
 namespace UnitTests;
 
 public class DPoPEventHandlersTest
@@ -33,13 +31,13 @@ public class DPoPEventHandlersTest
     {
         // Create a custom handler to verify it's being used
         var customHandlerCalled = false;
-        var customHandler = new Mock<MessageReceivedHandler>();
-        customHandler.Setup(h => h.HandleDisabledMode(It.IsAny<MessageReceivedContext>()))
-            .Callback(() => customHandlerCalled = true)
+        var customHandler = A.Fake<MessageReceivedHandler>();
+        A.CallTo(() => customHandler.HandleDisabledMode(A<MessageReceivedContext>._))
+            .Invokes(() => customHandlerCalled = true)
             .Returns(Task.CompletedTask);
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddSingleton(customHandler.Object);
+        serviceCollection.AddSingleton(customHandler);
         serviceCollection.AddSingleton(new DPoPOptions { Mode = DPoPModes.Disabled });
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -81,14 +79,14 @@ public class DPoPEventHandlersTest
     {
         // Create a custom handler to verify it's being used
         var customHandlerCalled = false;
-        var mockValidationService = new Mock<IDPoPProofValidationService>();
-        var customHandler = new Mock<TokenValidationHandler>(mockValidationService.Object);
-        customHandler.Setup(h => h.HandleDisabledMode(It.IsAny<TokenValidatedContext>()))
-            .Callback(() => customHandlerCalled = true)
+        var fakeValidationService = A.Fake<IDPoPProofValidationService>();
+        var customHandler = A.Fake<TokenValidationHandler>(o => o.WithArgumentsForConstructor(new object[] { fakeValidationService }));
+        A.CallTo(() => customHandler.HandleDisabledMode(A<TokenValidatedContext>._))
+            .Invokes(() => customHandlerCalled = true)
             .Returns(Task.CompletedTask);
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddSingleton<TokenValidationHandler>(customHandler.Object);
+        serviceCollection.AddSingleton<TokenValidationHandler>(customHandler);
         serviceCollection.AddSingleton(new DPoPOptions { Mode = DPoPModes.Disabled });
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -106,9 +104,9 @@ public class DPoPEventHandlersTest
     public async Task
         HandleOnTokenValidated_Should_Create_TokenValidationHandler_With_ValidationService_When_Handler_Not_Registered()
     {
-        var mockValidationService = new Mock<IDPoPProofValidationService>();
+        var fakeValidationService = A.Fake<IDPoPProofValidationService>();
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddSingleton(mockValidationService.Object);
+        serviceCollection.AddSingleton(fakeValidationService);
         serviceCollection.AddSingleton(new DPoPOptions { Mode = DPoPModes.Disabled });
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -136,13 +134,13 @@ public class DPoPEventHandlersTest
     {
         // Create a custom handler to verify it's being used
         var customHandlerCalled = false;
-        var customHandler = new Mock<ChallengeHandler>();
-        customHandler.Setup(h => h.HandleDisabledMode(It.IsAny<JwtBearerChallengeContext>()))
-            .Callback(() => customHandlerCalled = true)
+        var customHandler = A.Fake<ChallengeHandler>();
+        A.CallTo(() => customHandler.HandleDisabledMode(A<JwtBearerChallengeContext>._))
+            .Invokes(() => customHandlerCalled = true)
             .Returns(Task.CompletedTask);
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddSingleton(customHandler.Object);
+        serviceCollection.AddSingleton(customHandler);
         serviceCollection.AddSingleton(new DPoPOptions { Mode = DPoPModes.Disabled });
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 

@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-using Moq;
-
 namespace UnitTests;
 
 public class ChallengeHandlerTests
@@ -389,18 +387,15 @@ public class ChallengeHandlerTests
     {
         JwtBearerChallengeContext context = CreateJwtBearerChallengeContext();
         context.HttpContext.Items[KeyCloakConstants.DPoP.BearerErrorCode] = "invalid_token";
-        var mockHandler = new Mock<ChallengeHandler>();
-        mockHandler.Setup(h => h.BuildAuthenticateHeader(It.IsAny<JwtBearerChallengeContext>(),
-            It.IsAny<ChallengeHandler.AuthenticateHeaderConfig>()));
-        mockHandler.CallBase = true;
+        var mockHandler = A.Fake<ChallengeHandler>(o => o.CallsBaseMethods());
+        A.CallTo(() => mockHandler.BuildAuthenticateHeader(A<JwtBearerChallengeContext>._, A<ChallengeHandler.AuthenticateHeaderConfig>._)).DoesNothing();
 
-        await mockHandler.Object.HandleAllowedMode(context);
+        await mockHandler.HandleAllowedMode(context);
 
-        mockHandler.Verify(h => h.BuildAuthenticateHeader(
-                It.IsAny<JwtBearerChallengeContext>(),
-                It.Is<ChallengeHandler.AuthenticateHeaderConfig>(
-                    c => c.Scheme == KeyCloakConstants.DPoP.Error.BearerScheme)),
-            Times.Once);
+        A.CallTo(() => mockHandler.BuildAuthenticateHeader(
+                A<JwtBearerChallengeContext>._,
+                A<ChallengeHandler.AuthenticateHeaderConfig>.That.Matches(c => c.Scheme == KeyCloakConstants.DPoP.Error.BearerScheme)))
+            .MustHaveHappenedOnceExactly();
     }
 
     [Fact]
@@ -408,34 +403,28 @@ public class ChallengeHandlerTests
     {
         JwtBearerChallengeContext context = CreateJwtBearerChallengeContext();
         context.HttpContext.Items[KeyCloakConstants.DPoP.DPoPErrorCode] = "invalid_dpop_proof";
-        var mockHandler = new Mock<ChallengeHandler>();
-        mockHandler.Setup(h => h.BuildAuthenticateHeader(It.IsAny<JwtBearerChallengeContext>(),
-            It.IsAny<ChallengeHandler.AuthenticateHeaderConfig>()));
-        mockHandler.CallBase = true;
+        var mockHandler = A.Fake<ChallengeHandler>(o => o.CallsBaseMethods());
+        A.CallTo(() => mockHandler.BuildAuthenticateHeader(A<JwtBearerChallengeContext>._, A<ChallengeHandler.AuthenticateHeaderConfig>._)).DoesNothing();
 
-        await mockHandler.Object.HandleAllowedMode(context);
+        await mockHandler.HandleAllowedMode(context);
 
-        mockHandler.Verify(h => h.BuildAuthenticateHeader(
-                It.IsAny<JwtBearerChallengeContext>(),
-                It.Is<ChallengeHandler.AuthenticateHeaderConfig>(c =>
-                    c.Scheme == KeyCloakConstants.DPoP.Error.DPoPScheme)),
-            Times.Once);
+        A.CallTo(() => mockHandler.BuildAuthenticateHeader(
+                A<JwtBearerChallengeContext>._,
+                A<ChallengeHandler.AuthenticateHeaderConfig>.That.Matches(c => c.Scheme == KeyCloakConstants.DPoP.Error.DPoPScheme)))
+            .MustHaveHappenedOnceExactly();
     }
 
     [Fact]
     public async Task HandleAllowedMode_should_not_build_additional_headers_when_no_errors_exist()
     {
         JwtBearerChallengeContext context = CreateJwtBearerChallengeContext();
-        var mockHandler = new Mock<ChallengeHandler>();
-        mockHandler.Setup(h => h.BuildAuthenticateHeader(It.IsAny<JwtBearerChallengeContext>(),
-            It.IsAny<ChallengeHandler.AuthenticateHeaderConfig>()));
-        mockHandler.CallBase = true;
+        var mockHandler = A.Fake<ChallengeHandler>(o => o.CallsBaseMethods());
+        A.CallTo(() => mockHandler.BuildAuthenticateHeader(A<JwtBearerChallengeContext>._, A<ChallengeHandler.AuthenticateHeaderConfig>._)).DoesNothing();
 
-        await mockHandler.Object.HandleAllowedMode(context);
+        await mockHandler.HandleAllowedMode(context);
 
-        mockHandler.Verify(
-            h => h.BuildAuthenticateHeader(It.IsAny<JwtBearerChallengeContext>(),
-                It.IsAny<ChallengeHandler.AuthenticateHeaderConfig>()), Times.Never);
+        A.CallTo(() => mockHandler.BuildAuthenticateHeader(A<JwtBearerChallengeContext>._, A<ChallengeHandler.AuthenticateHeaderConfig>._))
+            .MustNotHaveHappened();
     }
 
     [Fact]
@@ -443,18 +432,15 @@ public class ChallengeHandlerTests
     {
         JwtBearerChallengeContext context = CreateJwtBearerChallengeContext();
         context.HttpContext.Items[KeyCloakConstants.DPoP.DPoPErrorCode] = "invalid_token";
-        var mockHandler = new Mock<ChallengeHandler>();
-        mockHandler.Setup(h => h.BuildAuthenticateHeader(It.IsAny<JwtBearerChallengeContext>(),
-            It.IsAny<ChallengeHandler.AuthenticateHeaderConfig>()));
-        mockHandler.CallBase = true;
+        var mockHandler = A.Fake<ChallengeHandler>(o => o.CallsBaseMethods());
+        A.CallTo(() => mockHandler.BuildAuthenticateHeader(A<JwtBearerChallengeContext>._, A<ChallengeHandler.AuthenticateHeaderConfig>._)).DoesNothing();
 
-        await mockHandler.Object.HandleRequiredMode(context);
+        await mockHandler.HandleRequiredMode(context);
 
-        mockHandler.Verify(h => h.BuildAuthenticateHeader(
-                It.IsAny<JwtBearerChallengeContext>(),
-                It.Is<ChallengeHandler.AuthenticateHeaderConfig>(
-                    c => c.Scheme == KeyCloakConstants.DPoP.Error.DPoPScheme)),
-            Times.Once);
+        A.CallTo(() => mockHandler.BuildAuthenticateHeader(
+                A<JwtBearerChallengeContext>._,
+                A<ChallengeHandler.AuthenticateHeaderConfig>.That.Matches(c => c.Scheme == KeyCloakConstants.DPoP.Error.DPoPScheme)))
+            .MustHaveHappenedOnceExactly();
     }
 
     private JwtBearerChallengeContext CreateJwtBearerChallengeContext()
