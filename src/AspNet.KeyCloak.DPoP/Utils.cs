@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-[assembly: InternalsVisibleTo("KeyCloak.AspNet.Authentication.Api.UnitTests")]
+[assembly: InternalsVisibleTo("UnitTests")]
 
 namespace AspNetCore.Authentication.Api;
 
@@ -17,7 +17,7 @@ public abstract class Utils
     {
         Version? sdkVersion = typeof(AuthenticationBuilderExtensions).GetTypeInfo().Assembly.GetName().Version;
         var agentJson =
-            $"{{\"name\":\"KeyCloak.AspNet.Authentication.Api\",\"version\":\"{BuildVersionString(sdkVersion)}\"}}";
+            $"{{\"name\":\"AspNet.KeyCloak.DPoP\",\"version\":\"{BuildVersionString(sdkVersion)}\"}}";
         return Convert.ToBase64String(Encoding.UTF8.GetBytes(agentJson));
     }
 

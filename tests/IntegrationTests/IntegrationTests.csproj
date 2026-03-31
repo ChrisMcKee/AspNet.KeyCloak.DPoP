@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\KeyCloak.AspNet.Authentication.Api\KeyCloak.AspNet.Authentication.Api.csproj" />
+        <ProjectReference Include="..\..\src\AspNet.KeyCloak.DPoP\AspNet.KeyCloak.DPoP.csproj" />
     </ItemGroup>
 
     <ItemGroup>

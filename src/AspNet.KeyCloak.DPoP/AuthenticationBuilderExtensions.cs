@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
-[assembly: InternalsVisibleTo("KeyCloak.AspNet.Authentication.Api.UnitTests")]
+[assembly: InternalsVisibleTo("UnitTests")]
 
 namespace AspNetCore.Authentication.Api;
 
@@ -167,6 +167,7 @@ public static class AuthenticationBuilderExtensions
                 jwtBearerOptions => { jwtBearerOptions.Events = DPoPEventsFactory.Create(builder.Options); });
 
             builder.Services.TryAddSingleton(dPoPOptions);
+            builder.Services.TryAddSingleton<IDPoPJtiCache, InMemoryDPoPJtiCache>();
             builder.Services.TryAddScoped<IDPoPProofValidationService, DPoPProofValidationService>();
             builder.Services.TryAddScoped<MessageReceivedHandler>();
             builder.Services.TryAddScoped<TokenValidationHandler>();

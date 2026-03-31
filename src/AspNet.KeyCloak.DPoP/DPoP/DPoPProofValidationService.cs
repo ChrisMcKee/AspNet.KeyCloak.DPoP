@@ -15,6 +15,14 @@ namespace AspNetCore.Authentication.Api.DPoP;
 /// </summary>
 public class DPoPProofValidationService : IDPoPProofValidationService
 {
+    private readonly IDPoPJtiCache _jtiCache;
+
+    /// <summary>Initialises a new instance using the provided <paramref name="jtiCache" />.</summary>
+    public DPoPProofValidationService(IDPoPJtiCache? jtiCache = null)
+    {
+        _jtiCache = jtiCache ?? new InMemoryDPoPJtiCache();
+    }
+
     /// <summary>
     ///     Handler for processing and validating JWT tokens.
     /// </summary>
@@ -62,7 +70,7 @@ public class DPoPProofValidationService : IDPoPProofValidationService
             return result;
         }
 
-        ValidateDPoPPayload(validationParameters, result);
+        await ValidateDPoPPayloadAsync(validationParameters, result, cancellationToken);
 
         return result;
     }
@@ -148,12 +156,14 @@ public class DPoPProofValidationService : IDPoPProofValidationService
     }
 
     /// <summary>
-    ///     Validates the payload claims of the DPoP proof token.
+    ///     Validates the payload claims of the DPoP proof token, including jti replay detection.
     /// </summary>
     /// <param name="validationParameters">Validation parameters.</param>
     /// <param name="validationResult">Result object to populate.</param>
-    internal void ValidateDPoPPayload(DPoPProofValidationParameters validationParameters,
-        DPoPProofValidationResult validationResult)
+    /// <param name="cancellationToken">Optional cancellation token.</param>
+    internal async Task ValidateDPoPPayloadAsync(DPoPProofValidationParameters validationParameters,
+        DPoPProofValidationResult validationResult,
+        CancellationToken cancellationToken = default)
     {
         if (validationResult.ProofClaims == null)
         {
@@ -172,6 +182,17 @@ public class DPoPProofValidationService : IDPoPProofValidationService
         }
 
         if (!ValidateJtiClaim(validationResult.ProofClaims))
+        {
+            validationResult.SetError(
+                KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof,
+                KeyCloakConstants.DPoP.Error.Description.DPoPProofValidationFailure);
+            return;
+        }
+
+        // jti format is valid — now check it has not been replayed (RFC 9449 §11.1)
+        var jti = (string)validationResult.ProofClaims[KeyCloakConstants.DPoP.Jti];
+        var ttl = TimeSpan.FromSeconds(validationParameters.Options.IatOffset + validationParameters.Options.Leeway);
+        if (!await _jtiCache.TryAddAsync(jti, ttl, cancellationToken))
         {
             validationResult.SetError(
                 KeyCloakConstants.DPoP.Error.Code.InvalidDPoPProof,

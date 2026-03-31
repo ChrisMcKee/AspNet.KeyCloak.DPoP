@@ -12,7 +12,10 @@ public static class KeyCloakConstants
 
     public static class DPoP
     {
-        public const int IatOffsetDefault = 300;
+        /// <summary>
+        ///  RFC 9449 §11.1 keep this as low as possible
+        /// </summary>
+        public const int IatOffsetDefault = 30;
         public const int LeewayDefault = 30;
         public const string AuthenticationScheme = "DPoP ";
         public const string ProofHeader = "DPoP";

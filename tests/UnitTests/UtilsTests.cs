@@ -11,7 +11,7 @@ public class UtilsTests
     {
         var agentString = Utils.CreateAgentString();
         var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(agentString));
-        decoded.Should().Contain("\"name\":\"aspnetcore-api\"");
+        decoded.Should().Contain("\"name\":\"AspNet.KeyCloak.DPoP\"");
         decoded.Should().MatchRegex("\"version\":\"\\d+\\.\\d+\\.\\d+\"");
     }
 
