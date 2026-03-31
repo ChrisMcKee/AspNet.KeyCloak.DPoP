@@ -78,12 +78,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/open-endpoint", () => "This endpoint is available to all users.")
-    .WithName("AccessOpenEndpoint")
-    .WithOpenApi();
+    .WithName("AccessOpenEndpoint");
 
 app.MapGet("/restricted-endpoint", () => "You are special. This endpoint is available only to select users.")
     .WithName("AccessRestrictedEndpoint")
-    .WithOpenApi()
     .RequireAuthorization();
 
 try

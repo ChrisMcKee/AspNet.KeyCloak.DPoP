@@ -1,12 +1,11 @@
-[![Build and Test](https://github.com/auth0/aspnetcore-api/actions/workflows/build.yml/badge.svg)](https://github.com/auth0/aspnetcore-api/actions/workflows/build.yml)
-[![API Reference](https://img.shields.io/badge/API-Reference-blue)](https://auth0.github.io/aspnetcore-api/index.html)
-[![codecov](https://codecov.io/gh/auth0/aspnetcore-api/branch/master/graph/badge.svg?token=0CF2BINXXJ)](https://codecov.io/gh/auth0/aspnetcore-api)
+[![API Reference](https://img.shields.io/badge/API-Reference-blue)](https://KeyCloak.github.io/aspnetcore-api/index.html)
+[![codecov](https://codecov.io/gh/KeyCloak/aspnetcore-api/branch/master/graph/badge.svg?token=0CF2BINXXJ)](https://codecov.io/gh/KeyCloak/aspnetcore-api)
 [![License](https://img.shields.io/:license-Apache%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
-[![NuGet Version](https://img.shields.io/nuget/v/Auth0.AspNetCore.Authentication.Api?style=flat&logo=nuget)](https://www.nuget.org/packages/Auth0.AspNetCore.Authentication.Api)
-![Downloads](https://img.shields.io/nuget/dt/Auth0.AspNetCore.Authentication.Api)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/auth0/aspnetcore-api)
+[![NuGet Version](https://img.shields.io/nuget/v/KeyCloak.AspNetCore.Authentication.Api?style=flat&logo=nuget)](https://www.nuget.org/packages/KeyCloak.AspNetCore.Authentication.Api)
+![Downloads](https://img.shields.io/nuget/dt/KeyCloak.AspNetCore.Authentication.Api)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/KeyCloak/aspnetcore-api)
 
-A library that provides **everything the standard JWT Bearer authentication offers**, with the added power of **built-in DPoP (Demonstration of Proof-of-Possession)** support for enhanced token security. Simplify your Auth0 JWT authentication integration for ASP.NET Core APIs with Auth0-specific configuration and validation.
+A library that provides **everything the standard JWT Bearer authentication offers**, with the added power of **built-in DPoP (Demonstration of Proof-of-Possession)** support for enhanced token security. Simplify your KeyCloak JWT authentication integration for ASP.NET Core APIs with KeyCloak-specific configuration and validation.
 
 ## Table of Contents
 
@@ -38,10 +37,10 @@ This library builds on top of the standard `Microsoft.AspNetCore.Authentication.
 
 - **Complete JWT Bearer Functionality** - All features from `Microsoft.AspNetCore.Authentication.JwtBearer` are available
 - **Built-in DPoP Support** - Industry-leading proof-of-possession token security per [RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449)
-- **Auth0 Optimized** - Pre-configured for Auth0's authentication patterns
+- **KeyCloak Optimized** - Pre-configured for KeyCloak's authentication patterns
 - **Zero Lock-in** - Use standard JWT Bearer features alongside DPoP enhancements
-- **Single Package** - Everything you need in one dependency
-- **Flexible Configuration** - Options pattern with full access to underlying JWT Bearer configuration
+- **Single Package** – Everything you need in one dependency
+- **Flexible Configuration** – Options pattern with full access to underlying JWT Bearer configuration
 
 ## Requirements
 
@@ -52,13 +51,13 @@ This library builds on top of the standard `Microsoft.AspNetCore.Authentication.
 Install the package via NuGet Package Manager:
 
 ```bash
-dotnet add package Auth0.AspNetCore.Authentication.Api
+dotnet add package KeyCloak.AspNetCore.Authentication.Api
 ```
 
 Or via the Package Manager Console:
 
 ```powershell
-Install-Package Auth0.AspNetCore.Authentication.Api
+Install-Package KeyCloak.AspNetCore.Authentication.Api
 ```
 
 ## Migration from JWT Bearer
@@ -74,29 +73,29 @@ Migrating from JWT Bearer is simple:
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}";
-        options.Audience = builder.Configuration["Auth0:Audience"];
+        options.Authority = $"https://{builder.Configuration["KeyCloak:Domain"]}";
+        options.Audience = builder.Configuration["KeyCloak:Audience"];
     });
 ```
 
 **After:**
 ```csharp
-builder.Services.AddAuth0ApiAuthentication(options =>
+builder.Services.AddKeyCloakApiAuthentication(options =>
 {
-    options.Domain = builder.Configuration["Auth0:Domain"];
+    options.Domain = builder.Configuration["KeyCloak:Domain"];
     options.JwtBearerOptions = new JwtBearerOptions
     {
-        Audience = builder.Configuration["Auth0:Audience"]
+        Audience = builder.Configuration["KeyCloak:Audience"]
     };
 });
 ```
 
 ### What You Get
 
-**Zero Breaking Changes** - All JWT Bearer functionality works identically
-**5-15 Lines** - Typically only 5-15 lines of code change  
-**Full Compatibility** - Custom events, validation, and policies work as-is  
-**New Capabilities** - Optional DPoP support with zero refactoring
+**Zero Breaking Changes** – All JWT Bearer functionality works identically
+**5–15 Lines** – Typically only 5–15 lines of code change  
+**Full Compatibility** – Custom events, validation, and policies work as-is  
+**New Capabilities** – Optional DPoP support with zero refactoring
 
 ### Complete Migration Guide
 
@@ -108,16 +107,14 @@ For detailed migration instructions including:
 - Rollback procedures
 - Troubleshooting (10+ common issues)
 
-**See the [Complete Migration Guide](./MIGRATION.md)**
-
 ## Getting Started
 
 ### Basic Configuration
 
-Add Auth0 authentication to your ASP.NET Core API in `Program.cs`:
+Add KeyCloak authentication to your ASP.NET Core API in `Program.cs`:
 
 ```csharp
-using Auth0.AspNetCore.Authentication.Api;
+using KeyCloak.AspNetCore.Authentication.Api;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -125,12 +122,12 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Adds Auth0 JWT validation to the API
-builder.Services.AddAuth0ApiAuthentication(options =>
+// Adds KeyCloak JWT validation to the API
+builder.Services.AddKeyCloakApiAuthentication(options =>
 {
     options.JwtBearerOptions = new JwtBearerOptions
     {
-        Audience = builder.Configuration["Auth0:Audience"]
+        Audience = builder.Configuration["KeyCloak:Audience"]
     };
 });
 
@@ -176,8 +173,8 @@ Add the following settings to your `appsettings.json`:
 
 ```json
 {
-  "Auth0": {
-    "Domain": "your-tenant.auth0.com",
+  "KeyCloak": {
+    "Domain": "your-tenant.example.com",
     "Audience": "https://your-api-identifier"
   }
 }
@@ -185,28 +182,28 @@ Add the following settings to your `appsettings.json`:
 
 **Required Settings:**
 
-- **Domain**: Your Auth0 domain (e.g., `my-app.auth0.com`) - **without** the `https://` prefix
-- **Audience**: The API identifier configured in your Auth0 Dashboard
+- **Domain**: Your KeyCloak domain (e.g., `my-app.example.com`) - **without** the `https://` prefix
+- **Audience**: The API identifier configured in your KeyCloak Dashboard
 
 The library automatically constructs the authority URL as `https://{Domain}`.
 
 ## DPoP: Enhanced Token Security
 
-**DPoP (Demonstration of Proof-of-Possession)** is a security mechanism that binds access tokens to a cryptographic key, making them resistant to token theft and replay attacks. This library provides seamless DPoP integration for your Auth0-protected APIs.
+**DPoP (Demonstration of Proof-of-Possession)** is a security mechanism that binds access tokens to a cryptographic key, making them resistant to token theft and replay attacks. This library provides seamless DPoP integration for your KeyCloak-protected APIs.
 
-**Learn more about DPoP:** [Auth0 DPoP Documentation](https://auth0.com/docs/secure/sender-constraining/demonstrating-proof-of-possession-dpop)
+**Learn more about DPoP:** [KeyCloak DPoP Documentation](https://auth0.com/docs/secure/sender-constraining/demonstrating-proof-of-possession-dpop)
 
 ### Enabling DPoP
 
 Enable DPoP with a single method call:
 
 ```csharp
-builder.Services.AddAuth0ApiAuthentication(options =>
+builder.Services.AddKeyCloakApiAuthentication(options =>
 {
-    options.Domain = builder.Configuration["Auth0:Domain"];
+    options.Domain = builder.Configuration["KeyCloak:Domain"];
     options.JwtBearerOptions = new JwtBearerOptions
     {
-        Audience = builder.Configuration["Auth0:Audience"]
+        Audience = builder.Configuration["KeyCloak:Audience"]
     };
 }).WithDPoP(); // Enable DPoP support
 ```
@@ -218,12 +215,12 @@ That's it! Your API now supports DPoP tokens while maintaining backward compatib
 For fine-grained control, configure DPoP behavior:
 
 ```csharp
-builder.Services.AddAuth0ApiAuthentication(options =>
+builder.Services.AddKeyCloakApiAuthentication(options =>
 {
-    options.Domain = builder.Configuration["Auth0:Domain"];
+    options.Domain = builder.Configuration["KeyCloak:Domain"];
     options.JwtBearerOptions = new JwtBearerOptions
     {
-        Audience = builder.Configuration["Auth0:Audience"]
+        Audience = builder.Configuration["KeyCloak:Audience"]
     };
 }).WithDPoP(dpopOptions =>
 {
@@ -240,13 +237,11 @@ builder.Services.AddAuth0ApiAuthentication(options =>
 
 Choose the right enforcement mode for your security requirements:
 
-| Mode | Description |
-|------|-------------|
-| `DPoPModes.Allowed` *(default)* | Accept both DPoP and Bearer tokens |
-| `DPoPModes.Required` | Only accept DPoP tokens, reject Bearer tokens |
-| `DPoPModes.Disabled` | Standard JWT Bearer validation only |
-
-> **Learn more:** See detailed DPoP examples and use cases in [EXAMPLES.md](./EXAMPLES.md#dpop-demonstration-of-proof-of-possession)
+| Mode                            | Description                                   |
+|---------------------------------|-----------------------------------------------|
+| `DPoPModes.Allowed` *(default)* | Accept both DPoP and Bearer tokens            |
+| `DPoPModes.Required`            | Only accept DPoP tokens, reject Bearer tokens |
+| `DPoPModes.Disabled`            | Standard JWT Bearer validation only           |
 
 ## Advanced Features
 
@@ -255,12 +250,12 @@ Choose the right enforcement mode for your security requirements:
 Since this library provides **complete access to JWT Bearer configuration**, you can use any standard JWT Bearer option:
 
 ```csharp
-builder.Services.AddAuth0ApiAuthentication(options =>
+builder.Services.AddKeyCloakApiAuthentication(options =>
 {
-    options.Domain = builder.Configuration["Auth0:Domain"];
+    options.Domain = builder.Configuration["KeyCloak:Domain"];
     options.JwtBearerOptions = new JwtBearerOptions
     {
-        Audience = builder.Configuration["Auth0:Audience"],
+        Audience = builder.Configuration["KeyCloak:Audience"],
         
         // All standard JWT Bearer options are available
         RequireHttpsMetadata = true,
@@ -302,12 +297,12 @@ builder.Services.AddAuth0ApiAuthentication(options =>
 
 For comprehensive, copy-pastable code examples covering various scenarios, see **[EXAMPLES.md](./EXAMPLES.md)**:
 
-- **Getting Started** - Basic authentication and endpoint protection
-- **Configuration** - Custom token validation and settings
-- **DPoP** - All DPoP modes with practical examples
-- **Authorization** - Scopes, permissions, roles, and custom handlers
-- **Advanced Scenarios** - Claims, events, custom error responses
-- **Integration** - SignalR and other integrations
+- **Getting Started** – Basic authentication and endpoint protection
+- **Configuration** – Custom token validation and settings
+- **DPoP** – All DPoP modes with practical examples
+- **Authorization** – Scopes, permissions, roles, and custom handlers
+- **Advanced Scenarios** – Claims, events, custom error responses
+- **Integration** – SignalR and other integrations
 
 ## Development
 
@@ -316,10 +311,10 @@ For comprehensive, copy-pastable code examples covering various scenarios, see *
 Clone the repository and build the solution:
 
 ```bash
-git clone https://github.com/auth0/aspnetcore-api.git
+git clone https://github.com/KeyCloak/aspnetcore-api.git
 cd aspnetcore-api
-dotnet restore Auth0.AspNetCore.Authentication.Api.sln
-dotnet build Auth0.AspNetCore.Authentication.Api.sln --configuration Release
+dotnet restore KeyCloak.AspNetCore.Authentication.Api.sln
+dotnet build KeyCloak.AspNetCore.Authentication.Api.sln --configuration Release
 ```
 
 ### Running Tests
@@ -327,7 +322,7 @@ dotnet build Auth0.AspNetCore.Authentication.Api.sln --configuration Release
 Run the unit test suite:
 
 ```bash
-dotnet test tests/Auth0.AspNetCore.Authentication.Api.UnitTests/
+dotnet test tests/KeyCloak.AspNetCore.Authentication.Api.UnitTests/
 ```
 
 ### Playground Application
@@ -336,11 +331,11 @@ The repository includes a playground application for testing both standard JWT B
 
 #### Setup
 
-1. **Configure Auth0 settings** in `Auth0.AspNetCore.Authentication.Api.Playground/appsettings.json`:
+1. **Configure KeyCloak settings** in `KeyCloak.AspNetCore.Authentication.Api.Playground/appsettings.json`:
    ```json
    {
-     "Auth0": {
-       "Domain": "your-tenant.auth0.com",
+     "KeyCloak": {
+       "Domain": "your-tenant.example.com",
        "Audience": "https://your-api-identifier"
      }
    }
@@ -348,7 +343,7 @@ The repository includes a playground application for testing both standard JWT B
 
 2. **Run the playground**:
    ```bash
-   cd Auth0.AspNetCore.Authentication.Api.Playground
+   cd KeyCloak.AspNetCore.Authentication.Api.Playground
    dotnet run
    ```
 
@@ -359,14 +354,14 @@ The repository includes a playground application for testing both standard JWT B
 
 #### Testing with Postman
 
-The playground includes a pre-configured Postman collection (`Auth0.AspNetCore.Authentication.Api.Playground.postman_collection.json`) with ready-to-use requests:
+The playground includes a pre-configured Postman collection (`KeyCloak.AspNetCore.Authentication.Api.Playground.postman_collection.json`) with ready-to-use requests:
 
 1. Import the collection into Postman
-2. Obtain a JWT token from Auth0
+2. Obtain a JWT token from KeyCloak
 3. Set the `{{token}}` variable in your Postman environment
 4. Test both endpoints with pre-configured headers
 
-See the [Playground README](./Auth0.AspNetCore.Authentication.Api.Playground/README.md) for detailed testing instructions and examples.
+See the [Playground README](./KeyCloak.AspNetCore.Authentication.Api.Playground/README.md) for detailed testing instructions and examples.
 
 ## Contributing
 
@@ -374,8 +369,8 @@ We appreciate your contributions! Please review our [contribution guidelines](./
 
 ### Contribution Checklist
 
-- ✅ Read the [Auth0 General Contribution Guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
-- ✅ Read the [Auth0 Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
+- ✅ Read the [KeyCloak General Contribution Guidelines](https://github.com/KeyCloak/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
+- ✅ Read the [KeyCloak Code of Conduct](https://github.com/KeyCloak/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 - ✅ Ensure all tests pass
 - ✅ Add tests for new functionality
 - ✅ Update documentation as needed
@@ -385,26 +380,17 @@ We appreciate your contributions! Please review our [contribution guidelines](./
 
 If you have questions or need help:
 
-- 📖 Check the [Auth0 Documentation](https://auth0.com/docs)
+- 📖 Check the [KeyCloak Documentation](https://KeyCloak.com/docs)
 - � See [EXAMPLES.md](./EXAMPLES.md) for code examples
-- 💬 Visit the [Auth0 Community](https://community.auth0.com/)
-- 🐛 Report issues on [GitHub Issues](https://github.com/auth0/aspnetcore-api/issues)
+- 💬 Visit the [KeyCloak Community](https://community.KeyCloak.com/)
+- 🐛 Report issues on [GitHub Issues](https://github.com/KeyCloak/aspnetcore-api/issues)
 
 ## License
+Copyright 2026 Modified for KeyCloak by Chris McKee
 Copyright 2025 Okta, Inc.
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 – see the [LICENSE](LICENSE) file for details.
 
 Authors
 Okta Inc.
 ---
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: light)" srcset="https://cdn.auth0.com/website/sdks/logos/auth0_light_mode.png" width="150">
-    <source media="(prefers-color-scheme: dark)" srcset="https://cdn.auth0.com/website/sdks/logos/auth0_dark_mode.png" width="150">
-    <img alt="Auth0 Logo" src="https://cdn.auth0.com/website/sdks/logos/auth0_light_mode.png" width="150">
-  </picture>
-</p>
-<p align="center">Auth0 is an easy-to-implement, adaptable authentication and authorization platform. To learn more check out <a href="https://auth0.com/why-auth0">Why Auth0?</a></p>
-<p align="center">This project is licensed under the Apache License 2.0. See the <a href="./LICENSE">LICENSE</a> file for more info.</p>
