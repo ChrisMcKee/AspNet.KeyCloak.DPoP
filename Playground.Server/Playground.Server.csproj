@@ -8,9 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
-        <PackageReference Include="Testcontainers.Keycloak" Version="*" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Swashbuckle.AspNetCore" />
+        <PackageReference Include="Testcontainers.Keycloak" />
     </ItemGroup>
 
     <ItemGroup>

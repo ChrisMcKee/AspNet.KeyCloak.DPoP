@@ -19,6 +19,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Client", "Playgr
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Playground.Frontend", "Playground.Frontend\Playground.Frontend.esproj", "{3FC84665-4C37-4F44-9FBF-949B0EAEB7AC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{A32EFF3E-F71D-4E1D-8FA1-247DA1814F75}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
