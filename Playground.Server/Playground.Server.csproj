@@ -4,19 +4,15 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>AspNetCore.Authentication.Api.Playground</RootNamespace>
+        <RootNamespace>Playground.Server</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Swashbuckle.AspNetCore" />
-        <PackageReference Include="Testcontainers.Keycloak" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Update="realm-playground.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
         <Content Update="appsettings.Development.json">
           <DependentUpon>appsettings.json</DependentUpon>
         </Content>

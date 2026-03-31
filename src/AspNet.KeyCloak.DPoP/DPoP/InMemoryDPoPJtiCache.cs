@@ -9,6 +9,7 @@ namespace AspNetCore.Authentication.Api.DPoP;
 public sealed class InMemoryDPoPJtiCache : IDPoPJtiCache
 {
     private readonly IMemoryCache _cache;
+    private const string Prefix = nameof(InMemoryDPoPJtiCache) + "-";
 
     /// <summary>Initialises a new instance using a dedicated <see cref="MemoryCache" />.</summary>
     public InMemoryDPoPJtiCache() : this(new MemoryCache(new MemoryCacheOptions()))
@@ -29,7 +30,7 @@ public sealed class InMemoryDPoPJtiCache : IDPoPJtiCache
         // GetOrCreate returns the existing value if the key already exists, or creates and stores a new
         // sentinel value if it does not. We treat the presence of any existing entry as a replay.
         var isNew = false;
-        _cache.GetOrCreate(jti, entry =>
+        _cache.GetOrCreate(Prefix+jti, entry =>
         {
             entry.AbsoluteExpirationRelativeToNow = ttl;
             isNew = true;

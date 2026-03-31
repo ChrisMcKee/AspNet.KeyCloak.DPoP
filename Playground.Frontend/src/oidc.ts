@@ -47,7 +47,7 @@ export const {
     .createUtils();
 
 // Can be call anywhere, even in the body of a React component.
-// All subsequent calls will be safely ignored.
+// All later calls will be safely ignored.
 bootstrapOidc(({ process }) =>
     process.env.OIDC_USE_MOCK === "true"
         ? {
@@ -67,11 +67,18 @@ bootstrapOidc(({ process }) =>
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
 /**
- * Fetch wrapper that attaches a DPoP-bound access token.
- * Relative URLs are resolved against VITE_API_BASE_URL (Playground.Server).
- * oidc-spa intercepts the call and injects the DPoP proof header automatically.
+ * Shared API fetch wrapper for Playground.Server calls.
+ * Relative URLs are resolved against VITE_API_BASE_URL.
+ * If auth is enabled, oidc-spa intercepts the Authorization header and adds DPoP proof.
  */
-export const fetchWithAuth: typeof fetch = async (input, init) => {
+export const fetchApi = async (
+    input: Parameters<typeof fetch>[0],
+    init?: RequestInit,
+    options?: {
+        auth?: "none" | "optional" | "required";
+    }
+): Promise<Response> => {
+    const authMode = options?.auth ?? "optional";
     const oidc = await getOidc();
 
     const url =
@@ -79,12 +86,20 @@ export const fetchWithAuth: typeof fetch = async (input, init) => {
             ? `${apiBaseUrl}${input}`
             : input;
 
-    if (oidc.isUserLoggedIn) {
+    if (authMode === "required" && !oidc.isUserLoggedIn) {
+        throw new Error("User must be logged in to call this endpoint.");
+    }
+
+    if (authMode !== "none" && oidc.isUserLoggedIn) {
         const accessToken = await oidc.getAccessToken();
         const headers = new Headers(init?.headers);
-        headers.set("Authorization", `DPoP ${accessToken}`);
+        headers.set("Authorization", `Bearer ${accessToken}`);
         (init ??= {}).headers = headers;
     }
 
     return fetch(url, init);
 };
+
+export const fetchWithAuth: typeof fetch = (input, init) =>
+    fetchApi(input, init, { auth: "required" });
+

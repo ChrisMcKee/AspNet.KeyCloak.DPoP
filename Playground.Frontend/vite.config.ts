@@ -1,34 +1,46 @@
-import { defineConfig } from "vite";
+import {defineConfig, loadEnv} from 'vite';
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin";
 import { oidcSpa } from "oidc-spa/vite-plugin";
+import fs from 'fs';
 
-const config = defineConfig({
-    plugins: [
-        nitroV2Plugin({
-            preset: "vercel"
-        }),
-        // this is the plugin that enables path aliases
-        viteTsConfigPaths({
-            projects: ["./tsconfig.json"]
-        }),
-        tailwindcss(),
-        tanstackStart(),
-        oidcSpa({
-            browserRuntimeFreeze: {
-                enabled: true
-                //excludes: [ "fetch", "XMLHttpRequest"]
-            },
-            DPoP: {
-                enabled: true,
-                mode: "enforced"
-            }
-        }),
-        viteReact()
-    ]
+export default defineConfig(({mode}) => {
+    const env = loadEnv(mode, process.cwd(), '');
+    return {
+        plugins: [
+            nitroV2Plugin({
+                preset: "vercel"
+            }),
+            // this is the plugin that enables path aliases
+            viteTsConfigPaths({
+                projects: ["./tsconfig.json"]
+            }),
+            tailwindcss(),
+            tanstackStart(),
+            oidcSpa({
+                browserRuntimeFreeze: {
+                    enabled: true
+                    //excludes: [ "fetch", "XMLHttpRequest"]
+                },
+                DPoP: {
+                    enabled: true,
+                    mode: "enforced"
+                },
+                tokenSubstitution: {
+                    enabled: true
+                }
+            }),
+            viteReact()
+        ],
+        server: {
+            port: parseInt(env.VITE_PORT),
+            https: env.CERT_PATH && env.CERT_KEY_PATH ? {
+                cert: fs.readFileSync(env.CERT_PATH),
+                key: fs.readFileSync(env.CERT_KEY_PATH)
+            } : undefined,
+        }
+    }
 });
-
-export default config;

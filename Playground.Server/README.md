@@ -14,8 +14,8 @@ The playground application includes:
 
 ## Prerequisites
 
-- .NET 8.0 SDK
-- An Auth0 account and application configured for API access
+- .NET 10.0 SDK
+- Docker to run Aspire
 - Postman (optional, for using the pre-configured collection)
 
 ## Configuration

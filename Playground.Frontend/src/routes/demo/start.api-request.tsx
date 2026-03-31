@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { fetchWithAuth, enforceLogin } from "@/oidc";
+import { fetchApi, enforceLogin } from "@/oidc";
 import Spinner from "@/components/Spinner";
 
 type EndpointResult = {
@@ -11,8 +11,8 @@ export const Route = createFileRoute("/demo/start/api-request")({
     beforeLoad: enforceLogin,
     loader: async (): Promise<EndpointResult> => {
         const [openRes, restrictedRes] = await Promise.all([
-            fetch("/open-endpoint"),
-            fetchWithAuth("/restricted-endpoint")
+            fetchApi("/open-endpoint", undefined, { auth: "none" }),
+            fetchApi("/restricted-endpoint", undefined, { auth: "required" })
         ]);
 
         return {

@@ -179,43 +179,43 @@ public static class AuthenticationBuilderExtensions
     /// <summary>
     ///     Configures the <see cref="JwtBearerOptions" /> instance using the provided <see cref="KeyCloakApiOptions" />.
     /// </summary>
-    internal static void ConfigureJwtBearerOptions(JwtBearerOptions? jwtBearerOptions, KeyCloakApiOptions? KeyCloakApiOptions)
+    internal static void ConfigureJwtBearerOptions(JwtBearerOptions? jwtBearerOptions, KeyCloakApiOptions? keyCloakApiOptions)
     {
         ArgumentNullException.ThrowIfNull(jwtBearerOptions);
-        ArgumentNullException.ThrowIfNull(KeyCloakApiOptions);
-        ArgumentNullException.ThrowIfNull(KeyCloakApiOptions.JwtBearerOptions);
+        ArgumentNullException.ThrowIfNull(keyCloakApiOptions);
+        ArgumentNullException.ThrowIfNull(keyCloakApiOptions.JwtBearerOptions);
 
-        jwtBearerOptions.ClaimsIssuer = KeyCloakApiOptions.JwtBearerOptions.ClaimsIssuer;
-        jwtBearerOptions.TimeProvider = KeyCloakApiOptions.JwtBearerOptions.TimeProvider;
+        jwtBearerOptions.ClaimsIssuer = keyCloakApiOptions.JwtBearerOptions.ClaimsIssuer;
+        jwtBearerOptions.TimeProvider = keyCloakApiOptions.JwtBearerOptions.TimeProvider;
 
-        jwtBearerOptions.Authority = KeyCloakApiOptions.Authority ?? $"https://{KeyCloakApiOptions.Domain}";
-        jwtBearerOptions.Audience = KeyCloakApiOptions.JwtBearerOptions.Audience;
-        jwtBearerOptions.Challenge = KeyCloakApiOptions.JwtBearerOptions.Challenge;
-        jwtBearerOptions.SaveToken = KeyCloakApiOptions.JwtBearerOptions.SaveToken;
-        jwtBearerOptions.IncludeErrorDetails = KeyCloakApiOptions.JwtBearerOptions.IncludeErrorDetails;
-        jwtBearerOptions.RequireHttpsMetadata = KeyCloakApiOptions.JwtBearerOptions.RequireHttpsMetadata;
-        jwtBearerOptions.MetadataAddress = KeyCloakApiOptions.JwtBearerOptions.MetadataAddress;
-        jwtBearerOptions.Configuration = KeyCloakApiOptions.JwtBearerOptions.Configuration;
-        jwtBearerOptions.ConfigurationManager = KeyCloakApiOptions.JwtBearerOptions.ConfigurationManager;
-        jwtBearerOptions.RefreshOnIssuerKeyNotFound = KeyCloakApiOptions.JwtBearerOptions.RefreshOnIssuerKeyNotFound;
-        jwtBearerOptions.MapInboundClaims = KeyCloakApiOptions.JwtBearerOptions.MapInboundClaims;
-        jwtBearerOptions.BackchannelTimeout = KeyCloakApiOptions.JwtBearerOptions.BackchannelTimeout;
-        jwtBearerOptions.BackchannelHttpHandler = KeyCloakApiOptions.JwtBearerOptions.BackchannelHttpHandler;
-        jwtBearerOptions.Backchannel = KeyCloakApiOptions.JwtBearerOptions.Backchannel;
-        jwtBearerOptions.AutomaticRefreshInterval = KeyCloakApiOptions.JwtBearerOptions.AutomaticRefreshInterval;
-        jwtBearerOptions.RefreshInterval = KeyCloakApiOptions.JwtBearerOptions.RefreshInterval;
-        jwtBearerOptions.UseSecurityTokenValidators = KeyCloakApiOptions.JwtBearerOptions.UseSecurityTokenValidators;
+        jwtBearerOptions.Authority = keyCloakApiOptions.Authority ?? $"https://{keyCloakApiOptions.Domain}";
+        jwtBearerOptions.Audience = keyCloakApiOptions.JwtBearerOptions.Audience;
+        jwtBearerOptions.Challenge = keyCloakApiOptions.JwtBearerOptions.Challenge;
+        jwtBearerOptions.SaveToken = keyCloakApiOptions.JwtBearerOptions.SaveToken;
+        jwtBearerOptions.IncludeErrorDetails = keyCloakApiOptions.JwtBearerOptions.IncludeErrorDetails;
+        jwtBearerOptions.RequireHttpsMetadata = keyCloakApiOptions.JwtBearerOptions.RequireHttpsMetadata;
+        jwtBearerOptions.MetadataAddress = keyCloakApiOptions.JwtBearerOptions.MetadataAddress;
+        jwtBearerOptions.Configuration = keyCloakApiOptions.JwtBearerOptions.Configuration;
+        jwtBearerOptions.ConfigurationManager = keyCloakApiOptions.JwtBearerOptions.ConfigurationManager;
+        jwtBearerOptions.RefreshOnIssuerKeyNotFound = keyCloakApiOptions.JwtBearerOptions.RefreshOnIssuerKeyNotFound;
+        jwtBearerOptions.MapInboundClaims = keyCloakApiOptions.JwtBearerOptions.MapInboundClaims;
+        jwtBearerOptions.BackchannelTimeout = keyCloakApiOptions.JwtBearerOptions.BackchannelTimeout;
+        jwtBearerOptions.BackchannelHttpHandler = keyCloakApiOptions.JwtBearerOptions.BackchannelHttpHandler;
+        jwtBearerOptions.Backchannel = keyCloakApiOptions.JwtBearerOptions.Backchannel;
+        jwtBearerOptions.AutomaticRefreshInterval = keyCloakApiOptions.JwtBearerOptions.AutomaticRefreshInterval;
+        jwtBearerOptions.RefreshInterval = keyCloakApiOptions.JwtBearerOptions.RefreshInterval;
+        jwtBearerOptions.UseSecurityTokenValidators = keyCloakApiOptions.JwtBearerOptions.UseSecurityTokenValidators;
 
-        jwtBearerOptions.ForwardDefault = KeyCloakApiOptions.JwtBearerOptions.ForwardDefault;
-        jwtBearerOptions.ForwardAuthenticate = KeyCloakApiOptions.JwtBearerOptions.ForwardAuthenticate;
-        jwtBearerOptions.ForwardChallenge = KeyCloakApiOptions.JwtBearerOptions.ForwardChallenge;
-        jwtBearerOptions.ForwardForbid = KeyCloakApiOptions.JwtBearerOptions.ForwardForbid;
-        jwtBearerOptions.ForwardSignIn = KeyCloakApiOptions.JwtBearerOptions.ForwardSignIn;
-        jwtBearerOptions.ForwardSignOut = KeyCloakApiOptions.JwtBearerOptions.ForwardSignOut;
-        jwtBearerOptions.ForwardDefaultSelector = KeyCloakApiOptions.JwtBearerOptions.ForwardDefaultSelector;
+        jwtBearerOptions.ForwardDefault = keyCloakApiOptions.JwtBearerOptions.ForwardDefault;
+        jwtBearerOptions.ForwardAuthenticate = keyCloakApiOptions.JwtBearerOptions.ForwardAuthenticate;
+        jwtBearerOptions.ForwardChallenge = keyCloakApiOptions.JwtBearerOptions.ForwardChallenge;
+        jwtBearerOptions.ForwardForbid = keyCloakApiOptions.JwtBearerOptions.ForwardForbid;
+        jwtBearerOptions.ForwardSignIn = keyCloakApiOptions.JwtBearerOptions.ForwardSignIn;
+        jwtBearerOptions.ForwardSignOut = keyCloakApiOptions.JwtBearerOptions.ForwardSignOut;
+        jwtBearerOptions.ForwardDefaultSelector = keyCloakApiOptions.JwtBearerOptions.ForwardDefaultSelector;
 
-        jwtBearerOptions.TokenValidationParameters = KeyCloakApiOptions.JwtBearerOptions.TokenValidationParameters;
-        jwtBearerOptions.Events = JwtBearerEventsFactory.Create(KeyCloakApiOptions);
+        jwtBearerOptions.TokenValidationParameters = keyCloakApiOptions.JwtBearerOptions.TokenValidationParameters;
+        jwtBearerOptions.Events = JwtBearerEventsFactory.Create(keyCloakApiOptions);
     }
 
     /// <summary>

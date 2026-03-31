@@ -97,16 +97,6 @@ builder.Services.AddKeyCloakApiAuthentication(options =>
 **Full Compatibility** – Custom events, validation, and policies work as-is  
 **New Capabilities** – Optional DPoP support with zero refactoring
 
-### Complete Migration Guide
-
-For detailed migration instructions including:
-- 8 migration scenarios (basic to complex)
-- Custom events and validation
-- Multiple audiences
-- Testing strategies
-- Rollback procedures
-- Troubleshooting (10+ common issues)
-
 ## Getting Started
 
 ### Basic Configuration
