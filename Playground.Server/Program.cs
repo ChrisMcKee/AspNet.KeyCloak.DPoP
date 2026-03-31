@@ -23,24 +23,26 @@ builder.Services.AddCors(p => p.AddPolicy(corsPolicyName,
 builder.Services.AddKeyCloakApiAuthentication(options =>
 {
     options.Domain = builder.Configuration["KeyCloak:Domain"] ?? throw new InvalidOperationException("KeyCloak:Domain is required");
-    options.Authority = builder.Configuration["KeyCloak:Authority"]; // http://localhost:8080/realms/test
+    options.Authority = builder.Configuration["KeyCloak:Authority"];
     options.JwtBearerOptions = new JwtBearerOptions
     {
         Audience = builder.Configuration["KeyCloak:Audience"] ?? throw new InvalidOperationException("KeyCloak:Audience is required"),
-        // RequireHttpsMetadata = true,
+        RequireHttpsMetadata = true,
         // SaveToken = true,
         IncludeErrorDetails = true,
-        // TokenValidationParameters = new TokenValidationParameters
-        // {
-        //     ValidIssuer = options.Authority,
-        //     ValidAudience = builder.Configuration["KeyCloak:Audience"] ?? throw new InvalidOperationException("KeyCloak:Audience is required"),
-        //     ValidateIssuer = true,
-        //     ValidateAudience = true,
-        //     ValidateLifetime = true,
-        //     ValidateIssuerSigningKey = true,
-        //     ClockSkew = TimeSpan.FromMinutes(5),
-        //     NameClaimType = ClaimTypes.NameIdentifier
-        // },
+        TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = options.Authority,
+
+            // ValidateAudience = true,
+            // ValidAudience = builder.Configuration["KeyCloak:Audience"] ?? throw new InvalidOperationException("KeyCloak:Audience is required"),
+
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.FromMinutes(1),
+            //NameClaimType = ClaimTypes.NameIdentifier
+        },
         Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>

@@ -365,7 +365,7 @@ Contributions are welcome! Please ensure all tests pass and add tests for new fu
 If you have questions or need help:
 
 - 📖 See [EXAMPLES.md](./EXAMPLES.md) for code examples
-- 🐛 Report issues on [GitHub Issues](https://github.com/ChrisMcKee/aspnet-jwt-dpop/issues)
+- 🐛 Report issues on [GitHub Issues](https://github.com/ChrisMcKee/AspNet.KeyCloak.DPoPissues)
 
 ## License
 Copyright 2026 Chris McKee

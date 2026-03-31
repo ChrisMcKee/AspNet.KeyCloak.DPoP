@@ -1134,4 +1134,4 @@ curl --request GET \
 If you have questions or need help with these examples:
 
 - 📖 Check the [main README](README.md) for overview and setup instructions
-- 🐛 Report issues on [GitHub Issues](https://github.com/ChrisMcKee/aspnet-jwt-dpop/issues)
+- 🐛 Report issues on [GitHub Issues](https://github.com/ChrisMcKee/AspNet.KeyCloak.DPoPissues)

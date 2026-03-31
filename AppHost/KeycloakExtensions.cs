@@ -90,7 +90,7 @@ public static class KeycloakExtensions
             // https://github.com/keycloak/keycloak/issues/13933
             // https://github.com/quarkusio/quarkus/issues/33692
             .WithEnvironment("QUARKUS_HTTP_HTTP2", "false")
-            .WithHttpsHealthCheck(endpointName: ManagementEndpointName, path: "/health/ready")
+            .WithHttpHealthCheck(endpointName: ManagementEndpointName, path: "/health/ready")
             .WithEnvironment(context =>
             {
                 context.EnvironmentVariables[AdminEnvVarName] = resource.AdminReference;

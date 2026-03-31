@@ -1,36 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
 
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591</NoWarn>
-    <RootNamespace>AspNet.KeyCloak.DPoP</RootNamespace>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <RootNamespace>AspNet.KeyCloak.DPoP</RootNamespace>
 
-    <IsPackable>true</IsPackable>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 
-    <PackageId>AspNet.KeyCloak.DPoP</PackageId>
-    <Product>ASP.NET API with KeyCloak and DPoP Authentication</Product>
-    <Title>ASP.NET API with KeyCloak and DPoP Authentication</Title>
-    <Description>A library that provides everything the standard JWT Bearer authentication offers, with the added power of built-in DPoP (Demonstration of Proof-of-Possession) support for enhanced token security. Simplify your Auth0 JWT authentication integration for ASP.NET Core APIs with Auth0-specific configuration and validation.</Description>
-    <Summary>Auth0 JWT authentication for ASP.NET Core APIs with built-in DPoP support</Summary>
-    <PackageTags>authentication;jwt;bearer;dpop;aspnetcore;api;security;oauth2;openid;oidc</PackageTags>
-  </PropertyGroup>
+        <PackageId>AspNet.KeyCloak.DPoP</PackageId>
+        <Product>ASP.NET API with KeyCloak and DPoP Authentication</Product>
+        <Title>ASP.NET API with KeyCloak and DPoP Authentication</Title>
+        <Description>A library that provides everything the standard JWT Bearer authentication offers, with the added power of built-in DPoP (Demonstration of Proof-of-Possession) support for enhanced token security. Simplify your Auth0 JWT authentication integration for ASP.NET Core APIs with Auth0-specific configuration and validation.</Description>
+        <Summary>Auth0 JWT authentication for ASP.NET Core APIs with built-in DPoP support</Summary>
+        <PackageTags>authentication;jwt;bearer;dpop;aspnetcore;api;security;oauth2;openid;oidc</PackageTags>
+        <RepositoryUrl>https://github.com/ChrisMcKee/AspNet.KeyCloak.DPoP</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="UnitTests" />
-    <InternalsVisibleTo Include="IntegrationTests" />
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-  </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="UnitTests"/>
+        <InternalsVisibleTo Include="IntegrationTests"/>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+    </ItemGroup>
 
 </Project>
