@@ -71,7 +71,7 @@ public class MessageReceivedHandler : DPoPEventHandlerBase, IDPoPEventHandler<Me
     {
         if (!IsAuthorizationTokenExists(context.Request))
         {
-            _logger.LogError("Invalid authorization header in allowed mode - missing token");
+            _logger.LogWarning("Invalid authorization header in allowed mode - missing token");
             HandleInvalidRequestInAllowedMode(context);
             return Task.CompletedTask;
         }
