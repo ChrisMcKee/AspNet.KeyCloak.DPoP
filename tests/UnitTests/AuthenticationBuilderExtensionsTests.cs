@@ -117,7 +117,7 @@ public class AuthenticationBuilderExtensionsTest
 
         // Act & Assert
         Action action = () => AuthenticationBuilderExtensions.ConfigureJwtBearerOptions(jwtBearerOptions, KeyCloakOptions);
-        action.Should().Throw<ArgumentNullException>().WithParameterName("KeyCloakApiOptions");
+        action.Should().Throw<ArgumentNullException>().WithParameterName("keyCloakApiOptions");
     }
 
     [Fact]

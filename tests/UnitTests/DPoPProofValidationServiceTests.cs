@@ -642,9 +642,9 @@ public class DPoPProofValidationServiceTests
     public void ValidateJtiClaim_should_return_false_when_jti_contains_invalid_values(
         string? invalidValue)
     {
-        var proofClaims = new Dictionary<string, object?>
+        var proofClaims = new Dictionary<string, object>
         {
-            { KeyCloakConstants.DPoP.Jti, invalidValue }
+            { KeyCloakConstants.DPoP.Jti, invalidValue! }
         };
 
         var result = _service.ValidateJtiClaim(proofClaims);
