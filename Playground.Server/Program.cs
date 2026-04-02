@@ -1,14 +1,14 @@
-using System.Security.Claims;
-
 using AspNet.KeyCloak.DPoP;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
+using Scalar.AspNetCore;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 const string corsPolicyName = "cors-app-policy";
 
@@ -65,8 +65,8 @@ WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 // HTTPS redirect omitted — playground runs on plain HTTP (localhost:5059).

@@ -29,7 +29,7 @@ var keycloak = builder
     ;
 
 // Backend Api
-var api = builder.AddProject<Playground_Server>("kernel-api")
+var api = builder.AddProject<Playground_Server>("api")
                  .WithHttpsEndpoint(backendPort)
                  .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
                  .WithEnvironment("DOTNET_ENVIRONMENT", Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"))
