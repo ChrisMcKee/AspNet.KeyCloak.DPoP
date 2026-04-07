@@ -41,7 +41,7 @@ public class TokenValidationHandlerTests
     [InlineData("InvalidToken", "Token is invalid", HttpStatusCode.Unauthorized, "Token is invalid")]
     [InlineData("InvalidToken", null, HttpStatusCode.BadRequest, "InvalidToken")]
     [InlineData(null, null, HttpStatusCode.BadRequest, KeyCloakConstants.DPoP.Error.Description.UnknownError)]
-    public void SetErrorContext_Sets_All_Context_Items_And_Fails_Correctly(string errorCode, string errorDescription, HttpStatusCode statusCode, string expectedFailureMessage)
+    public void SetErrorContext_Sets_All_Context_Items_And_Fails_Correctly(string? errorCode, string? errorDescription, HttpStatusCode statusCode, string expectedFailureMessage)
     {
         // Arrange
         var context = CreateTokenValidatedContext();
@@ -56,8 +56,8 @@ public class TokenValidationHandlerTests
         context.HttpContext.Items[KeyCloakConstants.DPoP.DPoPStatusCode].Should().Be(statusCode);
         context.HttpContext.Items[KeyCloakConstants.DPoP.DPoPErrorDescription].Should().Be(errorDescription);
 
-        context.Result.Failure.Should().NotBeNull();
-        context.Result.Failure.Message.Should().Be(expectedFailureMessage);
+        context.Result?.Failure.Should().NotBeNull();
+        context.Result?.Failure?.Message.Should().Be(expectedFailureMessage);
     }
 
     [Theory]
