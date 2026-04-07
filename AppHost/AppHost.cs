@@ -24,7 +24,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var keycloak = builder
                .AddHttpsKeycloak("keycloak", keycloakPort, keycloakManagementPort)
-               .WithDataVolume()
+               // No persistent /opt/keycloak/data volume so imported realms are reapplied on fresh runs.
                .WithRealmImport("./Realms")
     ;
 
