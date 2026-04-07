@@ -46,7 +46,7 @@ public static class AuthenticationBuilderExtensions
         /// </returns>
         public KeyCloakApiAuthenticationBuilder AddKeyCloakApiAuthentication(Action<KeyCloakApiOptions>? configureOptions)
         {
-            return AddKeyCloakApiAuthentication(builder, KeyCloakConstants.AuthenticationScheme.KeyCloak, configureOptions);
+            return builder.AddKeyCloakApiAuthentication(KeyCloakConstants.AuthenticationScheme.KeyCloak, configureOptions);
         }
 
         /// <summary>
@@ -68,20 +68,20 @@ public static class AuthenticationBuilderExtensions
             ArgumentException.ThrowIfNullOrWhiteSpace(authenticationScheme);
             ArgumentNullException.ThrowIfNull(configureOptions);
 
-            var KeyCloakOptions = new KeyCloakApiOptions();
+            var keyCloakOptions = new KeyCloakApiOptions();
 
-            configureOptions(KeyCloakOptions);
+            configureOptions(keyCloakOptions);
 
-            ValidateKeyCloakApiOptions(KeyCloakOptions);
+            ValidateKeyCloakApiOptions(keyCloakOptions);
 
             builder.AddJwtBearer(
-                authenticationScheme, options => ConfigureJwtBearerOptions(options, KeyCloakOptions));
+                authenticationScheme, options => ConfigureJwtBearerOptions(options, keyCloakOptions));
 
             builder.Services.Configure(authenticationScheme, configureOptions);
             builder.Services.TryAddEnumerable(
                 ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>, KeyCloakJwtBearerPostConfigureOptions>());
 
-            return new KeyCloakApiAuthenticationBuilder(builder.Services, authenticationScheme, KeyCloakOptions);
+            return new KeyCloakApiAuthenticationBuilder(builder.Services, authenticationScheme, keyCloakOptions);
         }
     }
 
@@ -100,7 +100,7 @@ public static class AuthenticationBuilderExtensions
         /// </returns>
         public KeyCloakApiAuthenticationBuilder WithDPoP()
         {
-            return WithDPoP(builder, KeyCloakConstants.AuthenticationScheme.KeyCloak);
+            return builder.WithDPoP(KeyCloakConstants.AuthenticationScheme.KeyCloak);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ public static class AuthenticationBuilderExtensions
         /// </returns>
         public KeyCloakApiAuthenticationBuilder WithDPoP(string authenticationScheme)
         {
-            return WithDPoP(builder, authenticationScheme, _ => { });
+            return builder.WithDPoP(authenticationScheme, _ => { });
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ public static class AuthenticationBuilderExtensions
         /// </returns>
         public KeyCloakApiAuthenticationBuilder WithDPoP(Action<DPoPOptions> configureDPoPOptions)
         {
-            return WithDPoP(builder, KeyCloakConstants.AuthenticationScheme.KeyCloak, configureDPoPOptions);
+            return builder.WithDPoP(KeyCloakConstants.AuthenticationScheme.KeyCloak, configureDPoPOptions);
         }
 
         /// <summary>
