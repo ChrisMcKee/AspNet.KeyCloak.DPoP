@@ -6,6 +6,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>Chris McKee, Okta Inc.</Authors>
     <PackageTags>authentication;jwt;bearer;dpop;aspnetcore;api;security;oauth2;openid;oidc;keycloak</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 <!--    <PackageIconUrl></PackageIconUrl>-->
 <!--    <PackageIcon>Logo.png</PackageIcon>-->
     <PackageProjectUrl>https://github.com/ChrisMcKee/aspnet-jwt-dpop</PackageProjectUrl>
@@ -20,7 +21,7 @@
   </PropertyGroup>
     <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>1.0.0-beta.4</Version>
+    <Version>1.0.0-beta.5</Version>
     <AssemblyVersionNumber>0.0.0</AssemblyVersionNumber>
   </PropertyGroup>
   <PropertyGroup>
