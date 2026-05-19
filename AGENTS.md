@@ -40,11 +40,11 @@ dotnet build AspNet.KeyCloak.DPoP.sln --configuration Release
 # Unit tests (mocks, no KeyCloak connection)
 dotnet test tests/UnitTests/
 
-# Integration tests (requires running KeyCloak - use AppHost)
+# Integration tests (starts KeyCloak via Testcontainers; Docker required)
 dotnet test tests/IntegrationTests/
 ```
 
-**Integration test pattern**: `TestWebApplicationFactory` creates TestServer → `KeyCloakTokenHelper` obtains real tokens → `DPoPHelper` generates DPoP proofs with EC keys
+**Integration test pattern**: `KeyCloakFixture` starts a shared `Testcontainers.Keycloak` container from `tests/IntegrationTests/realm-test.json` → `TestWebApplicationFactory` creates TestServer → `KeyCloakTokenHelper` obtains real tokens for the active `KeyCloakScenario` → `DPoPHelper` generates DPoP proofs with EC keys
 
 ### Playground Testing (Aspire)
 
@@ -57,9 +57,8 @@ dotnet run
 
 This starts:
 - **Keycloak** (HTTPS on port 3443) with the `test` realm pre-imported from `AppHost/Realms/`
-- **Playground.Server** (backend API, port 3445) - configured via Aspire environment variables
+- **Playground.Server** (backend API, port 3445) - minimal API with `AddOpenApi()` + `MapScalarApiReference()`, configured via Aspire environment variables
 - **Playground.Frontend** (Vite/React, port 3000) - TypeScript OIDC client demonstrating DPoP flows
-- **Playground.Client** - standalone DPoP client for scripted testing
 
 The Aspire dashboard is available at `https://localhost:17216`.
 
@@ -102,13 +101,14 @@ DPoP events **wrap** user-defined `JwtBearerEvents`. `DPoPEventsFactory.Create()
 ### Unit Tests (`tests/UnitTests/`)
 - Use xUnit `[Fact]` and `[Theory]`
 - Use FakeItEasy for mocking (not Moq)
+- Use AwesomeAssertions for assertions (see `tests/UnitTests/GlobalUsings.cs`)
 - Mock `IDPoPProofValidationService` for event handler tests
 - Test each DPoP validator independently (see `DPoPProofValidationService.cs` internal methods)
 
 ### Integration Tests (`tests/IntegrationTests/`)
 - Inherit from `IAsyncLifetime` for test setup/teardown
-- Use `KeyCloakScenario` via `KeyCloakCollection` / `KeyCloakFixture`
-- **Never hardcode tokens** - use `KeyCloakTokenHelper.GetClientCredentialsTokenAsync()` with config from `KeyCloakTestConfiguration`
+- Use `KeyCloakScenario` via `KeyCloakCollection` / `KeyCloakFixture`; the fixture shares one `Testcontainers.Keycloak` instance and seeds it from `realm-test.json`
+- **Never hardcode tokens** - create `KeyCloakTokenHelper` from the active `KeyCloakScenario` (`_fixture.WithoutDPoP`, `_fixture.WithDPoPAllowed`, `_fixture.WithDPoPRequired`) and call `GetAccessTokenAsync()`
 - DPoP tests must create real EC keys: `ECDsa.Create(ECCurve.NamedCurves.nistP256)` (see `DPoPHelper`)
 
 ## Common Pitfalls
@@ -119,6 +119,8 @@ DPoP events **wrap** user-defined `JwtBearerEvents`. `DPoPEventsFactory.Create()
 4. **Event preservation**: `DPoPEventsFactory.Create()` preserves existing user-defined `JwtBearerEvents` from `KeyCloakApiOptions`.
 5. **Token validation timing**: Use `IatOffset` (default 300s) for clock skew, `Leeway` (default 30s) for lifetime checks.
 6. **jti replay cache**: `InMemoryDPoPJtiCache` is registered as singleton by `WithDPoP()`. For multi-instance deployments, replace with a distributed cache by implementing `IDPoPJtiCache`.
+7. **Playground orchestration scope**: `AppHost/AppHost.cs` wires Keycloak, `Playground.Server`, and `Playground.Frontend` only. `Playground.Client` is a separate console app; run it manually with environment variables when you want scripted end-to-end DPoP calls.
+8. **API docs in the playground**: `Playground.Server/Program.cs` uses `AddOpenApi()` + `MapScalarApiReference()` in development, not Swagger middleware.
 
 ## File Organization
 
@@ -134,12 +136,17 @@ src/AspNet.KeyCloak.DPoP/
   └── DPoP/
       ├── DPoPProofValidationService.cs     # Core RFC 9449 implementation
       ├── DPoPEventsFactory.cs              # Wires DPoP handlers into JWT Bearer events
+      ├── DPoPModes.cs                      # Allowed / Required / Disabled enum
       ├── DPoPOptions.cs                    # Mode, IatOffset, Leeway
+      ├── DPoPProofValidationParameters.cs  # Request/access-token context passed into validators
+      ├── DPoPProofValidationResult.cs      # Error/result contract used by validators and handlers
       ├── DPoPEventHandlers.cs              # Coordinates the three handler types
       ├── IDPoPProofValidationService.cs    # Abstraction for validation service
       ├── IDPoPJtiCache.cs                  # Abstraction for jti replay cache
       ├── InMemoryDPoPJtiCache.cs           # Default in-memory jti cache
       └── EventHandlers/
+          ├── DPoPEventHandlerBase.cs       # Shared header parsing and invalid-request handling
+          ├── IDPoPEventHandler.cs          # Generic event-handler contract
           ├── MessageReceivedHandler.cs     # Extracts DPoP token from headers
           ├── TokenValidationHandler.cs     # Runs full DPoP proof validation
           └── ChallengeHandler.cs           # Adds DPoP to WWW-Authenticate
@@ -155,7 +162,9 @@ Playground.Frontend/                       # Vite/React OIDC client (TypeScript)
 Playground.Client/                         # Standalone DPoP client
 
 tests/UnitTests/                           # Unit tests (FakeItEasy mocks)
-tests/IntegrationTests/                    # Integration tests (real Keycloak required)
+tests/IntegrationTests/                    # Integration tests (Testcontainers Keycloak)
+  ├── KeyCloakFixture.cs                   # Shared Testcontainers Keycloak bootstrap
+  └── realm-test.json                      # Imported realm used by integration tests
 ```
 
 ## KeyCloak-Specific Behaviors
@@ -189,3 +198,4 @@ tests/IntegrationTests/                    # Integration tests (real Keycloak re
 - **DPoP validation**: `src/AspNet.KeyCloak.DPoP/DPoP/DPoPProofValidationService.cs`
 - **Setup flow**: `src/AspNet.KeyCloak.DPoP/AuthenticationBuilderExtensions.cs:ConfigureJwtBearerOptions()`
 - **Aspire orchestration**: `AppHost/AppHost.cs`
+- **Containerized integration setup**: `tests/IntegrationTests/KeyCloakFixture.cs`
