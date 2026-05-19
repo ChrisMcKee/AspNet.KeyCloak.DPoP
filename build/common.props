@@ -1,39 +1,39 @@
 <Project>
-  <PropertyGroup>
-    <Product>ASP.NET API with KeyCloak and DPoP Authentication</Product>
-    <Description>A library that provides everything the standard JWT Bearer authentication offers, with built-in DPoP (Demonstration of Proof-of-Possession) support for enhanced token security and KeyCloak-specific configuration.</Description>
-    <Copyright>Copyright 2026 Chris McKee, Okta, Inc.</Copyright>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Authors>Chris McKee, Okta Inc.</Authors>
-    <PackageTags>authentication;jwt;bearer;dpop;aspnetcore;api;security;oauth2;openid;oidc;keycloak</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-<!--    <PackageIconUrl></PackageIconUrl>-->
-<!--    <PackageIcon>Logo.png</PackageIcon>-->
-    <PackageProjectUrl>https://github.com/ChrisMcKee/aspnet-jwt-dpop</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/ChrisMcKee/aspnet-jwt-dpop</RepositoryUrl>
-    <PackageReleaseNotes>
-      https://github.com/ChrisMcKee/aspnet-jwt-dpop#readme
-    </PackageReleaseNotes>
-    <CLSCompliant>true</CLSCompliant>
-    <ComVisible>false</ComVisible>
-  </PropertyGroup>
     <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-      <Version Condition="'$(Version)' == '' and '$(VersionPrefix)' == ''">1.0.0-beta.5</Version>
-    <AssemblyVersionNumber>0.0.0</AssemblyVersionNumber>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyVersion>$(AssemblyVersionNumber)</AssemblyVersion>
-    <AssemblyFileVersion>$(AssemblyVersionNumber)</AssemblyFileVersion>
-    <InformationalVersion>$(Version)</InformationalVersion>
-    <PackageVersion>$(Version)</PackageVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-  <ItemGroup>
-<!--    <None Include="../../build/Auth0Icon.png" Pack="true" Visible="false" PackagePath=""/>-->
-  </ItemGroup>
+        <Product>ASP.NET API with KeyCloak and DPoP Authentication</Product>
+        <Description>A library that provides everything the standard JWT Bearer authentication offers, with built-in DPoP (Demonstration of Proof-of-Possession) support for enhanced token security and KeyCloak-specific configuration.</Description>
+        <Copyright>Copyright 2026 Chris McKee, Okta, Inc.</Copyright>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Authors>Chris McKee, Okta Inc.</Authors>
+        <PackageTags>authentication;jwt;bearer;dpop;aspnetcore;api;security;oauth2;openid;oidc;keycloak</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIconUrl></PackageIconUrl>
+        <PackageIcon>logo.png</PackageIcon>
+        <PackageProjectUrl>https://github.com/ChrisMcKee/aspnet-jwt-dpop</PackageProjectUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/ChrisMcKee/aspnet-jwt-dpop</RepositoryUrl>
+        <PackageReleaseNotes>
+            https://github.com/ChrisMcKee/aspnet-jwt-dpop#readme
+        </PackageReleaseNotes>
+        <CLSCompliant>true</CLSCompliant>
+        <ComVisible>false</ComVisible>
+    </PropertyGroup>
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <Version Condition="'$(Version)' == '' and '$(VersionPrefix)' == ''">1.0.0-beta.5</Version>
+        <AssemblyVersionNumber>0.0.0</AssemblyVersionNumber>
+    </PropertyGroup>
+    <PropertyGroup>
+        <AssemblyVersion>$(AssemblyVersionNumber)</AssemblyVersion>
+        <AssemblyFileVersion>$(AssemblyVersionNumber)</AssemblyFileVersion>
+        <InformationalVersion>$(Version)</InformationalVersion>
+        <PackageVersion>$(Version)</PackageVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="../../build/logo.png" Pack="true" Visible="false" PackagePath=""/>
+    </ItemGroup>
 </Project>
