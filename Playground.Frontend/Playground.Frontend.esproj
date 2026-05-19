@@ -9,4 +9,5 @@
         <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
+    <Target Name="Pack"></Target>
 </Project>
