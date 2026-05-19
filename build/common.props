@@ -21,7 +21,7 @@
   </PropertyGroup>
     <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>1.0.0-beta.5</Version>
+      <Version Condition="'$(Version)' == '' and '$(VersionPrefix)' == ''">1.0.0-beta.5</Version>
     <AssemblyVersionNumber>0.0.0</AssemblyVersionNumber>
   </PropertyGroup>
   <PropertyGroup>
